@@ -1,5 +1,5 @@
-**e2erunner 2.0.0**
-*2022-06-17 Friday*
+**e2erunner 2.2.0**
+*2022-06-20 Monday*
 
 Prerequisites:
 --------------
