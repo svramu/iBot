@@ -11,8 +11,8 @@ async function runSheet(sheet, page) {
 
   for (let i = 2; i < sheet.rowCount; i++) {
     const isHidden = sheet.getRow(i).hidden
-    const action = sheet.getRow(i).getCell(4)
     const locator = sheet.getRow(i).getCell(3)
+    const action = sheet.getRow(i).getCell(4)
     const data = sheet.getRow(i).getCell(5)
 
     if (locator.value == null && action.value == null && data.value == null) {
@@ -26,24 +26,31 @@ async function runSheet(sheet, page) {
     if (action.isMerged || action.value == null || isHidden) {
       console.log()
     } else {
-      const a = action.value.toString()
+      const parts: string[] = action.value.toString().split(',')
+      const a = parts[0].trim().toLowerCase()
+      let tos = {} //Timeout in seconds
+      if (parts.length == 2) {
+        const secs: number = +parts[1].trim()
+        tos = { timeout: secs * 1000 }
+        console.log('\ttimeout:', secs, 'second(s)')
+      }
       const l = (locator.value) ? locator.value.toString() : ''
       const loc = page.locator(l)
       const d = (data.value) ? data.value.toString() : ''
       try {
         switch (a) {
           case 'url': await page.goto(l); break
-          case 'title': await expect(page).toHaveTitle(rexss(d)); break
-          case 'assert': await expect(loc).toHaveText(rexss(d)); break
-          case 'exists': await expect(loc).not.toHaveCount(0); break
-          case 'exists:not': await expect(loc).toHaveCount(0); break
-          case 'keys': await loc.fill(d); break
-          case 'dnd': await page.dragAndDrop(l, d); break //TBD: Is it working?!
-          case 'click': await loc.click(); break
+          case 'title': await expect(page).toHaveTitle(rexss(d), tos); break
+          case 'assert': await expect(loc).toHaveText(rexss(d), tos); break
+          case 'exists': await expect(loc).not.toHaveCount(0, tos); break
+          case 'exists:not': await expect(loc).toHaveCount(0, tos); break
+          case 'keys': await loc.fill(d, tos); break
+          case 'dnd': await page.dragAndDrop(l, d, tos); break //TBD: Is it working?!
+          case 'click': await loc.click(tos); break
           case 'click:text':
-          case 'link:text': await page.locator('text=' + l).click(); break
-          case 'key': await loc.press(d); break
-          case 'keys:enter': await await loc.press('Enter'); break
+          case 'link:text': await page.locator('text=' + l, tos).click(tos); break
+          case 'key': await loc.press(d, tos); break
+          case 'keys:enter': await await loc.press('Enter', tos); break
           // case 'dummy':
           //   await page.goto('http://the-internet.herokuapp.com/iframe')
           //   const textarea = await page.frameLocator('#mce_0_ifr').locator('#tinymce')
@@ -53,7 +60,7 @@ async function runSheet(sheet, page) {
           // case 'iframe': await page.frame[1]; break
           // case 'iframe:back': await lib.iframeBack(); break
           case 'script':
-            const result = await page.evaluate(d)
+            const result = await page.evaluate(d, tos)
             console.log(result)
             break
           default: console.log('\t', "Warning: Unknown Action", a)
