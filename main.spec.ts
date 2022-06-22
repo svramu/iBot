@@ -62,10 +62,10 @@ async function runSheet(sheet: Worksheet, page: Page) {
           case 'keys': await loc.fill(d, tos); break
           // case 'dnd': await page.dragAndDrop(l, d, tos); break //TBD: Is it working?!
           case 'click': await loc.click(tos); break
-          case 'click:text':
           case 'dblclick': await loc.dblclick(tos); break
-          case 'dblclick:text':
+          case 'click:text':
           case 'link:text': await ctx.locator('text=' + l, tos).click(tos); break
+          case 'dblclick:text': await ctx.locator('text=' + l, tos).dblclick(tos); break
           case 'key': await loc.press(d, tos); break
           case 'keys:enter': await loc.press('Enter', tos); break
           case 'file': loc.setInputFiles(d); break

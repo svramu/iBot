@@ -26,6 +26,9 @@ npx playwright test
 Release Notes:
 --------------
 
+**2.2.2** (22 June 2022)<br>
+Quick regression fix in click.
+
 **2.2.1** (22 June 2022)<br>
 Action dblclick and sleep. Logs Colored.
 
