@@ -4,13 +4,18 @@ import 'dotenv/config'
 
 const MAX_EMPTIES = 3
 
+const LOG_RESET = '\x1b[0m'
+const LOG_BRIGHT = '\x1b[1m'
+const LOG_DIM = '\x1b[2m'
+const LOG_RED = '\x1b[31m'
+
 function rexss(text: string) { return new RegExp('.*' + text + '.*') }
 
 async function runSheet(sheet: Worksheet, page: Page) {
   let empties = 0
   console.log('sheet row count:', sheet.rowCount)
   console.log()
-  
+
   const ctxStack: (Page | FrameLocator)[] = []
   let ctx: Page | FrameLocator = page
 
@@ -35,12 +40,12 @@ async function runSheet(sheet: Worksheet, page: Page) {
       const parts: string[] = action.value.toString().split(',')
       const a = parts[0].trim().toLowerCase()
       let tos = {} //Timeout in seconds
+      let secs = 0 //Timeout in seconds
       if (parts.length == 2) {
-        const secs: number = +parts[1].trim()
+        secs = +parts[1].trim()
         tos = { timeout: secs * 1000 }
         console.log('\ttimeout:', secs, 'second(s)')
-      }
-      const l = (locator.value) ? locator.value.toString() : ''
+      } const l = (locator.value) ? locator.value.toString() : ''
       const loc: Locator = ctx.locator(l)
       const d = (data.value) ? data.value.toString() : ''
       try {
@@ -58,6 +63,8 @@ async function runSheet(sheet: Worksheet, page: Page) {
           // case 'dnd': await page.dragAndDrop(l, d, tos); break //TBD: Is it working?!
           case 'click': await loc.click(tos); break
           case 'click:text':
+          case 'dblclick': await loc.dblclick(tos); break
+          case 'dblclick:text':
           case 'link:text': await ctx.locator('text=' + l, tos).click(tos); break
           case 'key': await loc.press(d, tos); break
           case 'keys:enter': await loc.press('Enter', tos); break
@@ -72,9 +79,14 @@ async function runSheet(sheet: Worksheet, page: Page) {
             ctx = ctxStack.pop()!
             break
           case 'script': console.log('\t=', await page.evaluate(d, tos)); break
+          case 'sleep': await page.waitForTimeout(secs * 1000); break
           case 'noop': break
           case 'end': break end
-          default: console.log('\t', "Warning: Unknown Action", a)
+          default:
+            console.log(
+              LOG_RED, '\t', 'Warning: Unknown Action',
+              LOG_BRIGHT, a,
+              LOG_RESET)
         }
       } catch (err) {
         console.log(i, "ERROR: ", err.name, err.message)
