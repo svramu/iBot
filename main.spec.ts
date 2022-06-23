@@ -16,6 +16,8 @@ async function runSheet(sheet: Worksheet, page: Page) {
   console.log('sheet row count:', sheet.rowCount)
   console.log()
 
+  const wait = async () => await page.waitForLoadState('networkidle')
+
   const ctxStack: (Page | FrameLocator)[] = []
   let ctx: Page | FrameLocator = page
 
@@ -79,14 +81,22 @@ async function runSheet(sheet: Worksheet, page: Page) {
             ctx = ctxStack.pop()!
             break
           case 'script': console.log('\t=', await page.evaluate(d, tos)); break
-          case 'sleep': await page.waitForTimeout(secs * 1000); break
+          case 'sleep':
+            console.log(LOG_RED, '\t', 'Warning: sleep can make flaky tests. Try', LOG_BRIGHT, 'wait.', LOG_RESET)
+            await page.waitForTimeout(secs * 1000)
+            break
           case 'noop': break
           case 'end': break end
+          case 'show': await wait(); console.log(await loc.textContent()); break
+          case 'show:value': await wait(); console.log(await loc.inputValue()); break
+          case 'wait': await wait(); break
+          case 'wait:all':
+            await page.waitForLoadState('networkidle', tos)
+            await page.waitForLoadState('load', tos)
+            await page.waitForLoadState('domcontentloaded', tos)
+            break
           default:
-            console.log(
-              LOG_RED, '\t', 'Warning: Unknown Action',
-              LOG_BRIGHT, a,
-              LOG_RESET)
+            console.log(LOG_RED, '\t', 'Warning: Unknown Action', LOG_BRIGHT, a, LOG_RESET)
         }
       } catch (err) {
         console.log(i, "ERROR: ", err.name, err.message)

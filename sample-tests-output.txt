@@ -1,0 +1,171 @@
+svr@tnr:~/corent/e2erunner2$ npx playwright test --headed 
+
+Running 1 test using 1 worker
+
+     main.spec.ts:131:1 › check all
+FILE: sample-tests.xlsx
+SHEET: all
+[
+  1, 2, 3, 4, 5,
+  6, 7, 8, 9
+]
+
+Runnning sheet: 1 basics
+---- ---- ---- ----
+sheet row count: 1048576
+
+.
+- 3 https://the-internet.herokuapp.com/ url null
+- 4 null title The Interne
+- 5 null title:exact The Internet
+- 6 h2 assert Example
+- 7 h2 assert:exact Available Examples
+- 8 (//a)[3] assert Add/Remove
+- 9 (//a)[3] click null
+.
+- 11 h3 assert Add/Remove
+- 12 (//button)[1] assert Add
+- 13 (//button)[2] exists:not null
+- 14 (//button)[1] click null
+- 15 (//button)[2] assert Delete
+- 16 (//button)[2] click null
+- 17 (//button)[2] exists:not null
+.
+- 19 null end null
+
+Runnning sheet: 2 key
+---- ---- ---- ----
+sheet row count: 11
+
+.
+- 3 https://the-internet.herokuapp.com/ url null
+- 4 null title The Internet
+- 5 key click:text null
+.
+- 7 h3 assert Key
+- 8 input#target key W
+- 9 p#result assert W
+- 10 input#target key ArrowRight
+- 11 p#result assert RIGHT
+
+Runnning sheet: 3 timeout
+---- ---- ---- ----
+sheet row count: 7
+
+.
+- 3 https://the-internet.herokuapp.com/dynamic_controls url null
+- 4 null title,10 The Interne
+        timeout: 10 second(s)
+- 5 (//h4)[1] assert:exact Dynamic Controls
+- 6 (//button)[2] click null
+- 7 p#message assert,4 enabled
+        timeout: 4 second(s)
+
+Runnning sheet: 4 keys
+---- ---- ---- ----
+sheet row count: 21
+
+.
+- 3 https://the-internet.herokuapp.com/ url null
+- 4 null title The Internet
+- 5 (//a)[22] assert Form Auth
+- 6 (//a)[22] click null
+.
+- 8 h2 assert Login
+- 9 input#username keys tomsmith
+- 10 input#password keys SuperSecretPassword!
+- 11 button.radius click null
+.
+- 13 h2 assert Secure
+- 14 a.button.secondary.radius click null
+.
+- 16 h2 assert Login
+.
+- 18 input#username keys tomsmith
+- 19 input#password keys SuperSecretPassword!
+- 20 button.radius click null
+- 21 h2 assert Secure
+
+Runnning sheet: 5 script
+---- ---- ---- ----
+sheet row count: 7
+
+.
+- 3 https://yizeng.me/2014/01/31/test-wysiwyg-editors-using-selenium-webdriver/ url null
+- 4 null title Yi Zeng
+- 5 null sleep 1500
+.
+- 6 null script window.frames.length
+        = 3
+.
+
+Runnning sheet: 6 attrib_href
+---- ---- ---- ----
+sheet row count: 7
+
+.
+- 3 https://the-internet.herokuapp.com/ url null
+- 4 text=Digest Auth attrib:href /digest
+.
+.
+
+Runnning sheet: 7 iframe
+---- ---- ---- ----
+sheet row count: 14
+
+- 2 https://the-internet.herokuapp.com/nested_frames url null
+- 3 [name="frame-top"] iframe null
+- 4 [name="frame-middle"] iframe null
+- 5 #content assert MIDDLE
+- 6 null iframe:back null
+- 7 null iframe:back null
+.
+  ✓  main.spec.ts:131:1 › check all (39s)
+- 10 #mce_0_ifr frame null
+- 11 #tinymce assert Your content goes here.
+- 12 #tinymce keys Testersdock.com
+- 13 #tinymce assert Testersdock.com
+- 14 null iframe:back null
+
+Runnning sheet: 8 sleep
+---- ---- ---- ----
+sheet row count: 15
+
+.
+- 3 https://123timer.com/5-second url null
+- 4 null title 123Timer
+- 5 text=Start Pause >> nth=0 click null
+- 6 null sleep,3 null
+        timeout: 3 second(s)
+         Warning: sleep can make flaky tests. Try  wait. 
+- 7 div.alertable-message exists:not null
+- 8 null sleep,3 null
+        timeout: 3 second(s)
+         Warning: sleep can make flaky tests. Try  wait. 
+- 9 div.alertable-message exists null
+- 10 div.alertable-message assert Finish
+.
+.
+
+Runnning sheet: 9 dblclick
+---- ---- ---- ----
+sheet row count: 19
+
+.
+- 3 https://tecagile.com/double-click-test/ url null
+- 4 null title Online Double
+- 5 #darea click null
+- 6 #darea dblclick null
+- 7 #darea assert 1
+- 8 #darea click null
+- 9 #darea assert 1
+- 10 #darea dblclick null
+- 11 #darea assert 2
+.
+.
+
+  Slow test file: main.spec.ts (39s)
+  Consider splitting slow test files to speed up parallel execution
+
+  1 passed (40s)
+svr@tnr:~/corent/e2erunner2$ 

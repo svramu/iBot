@@ -1,5 +1,5 @@
-**e2erunner 2.2.1**<br>
-*2022-06-22 Wednesday*<br>
+**e2erunner 2.3.0**<br>
+*2022-06-23 Thursday*<br>
 
 Prerequisites:
 --------------
@@ -25,6 +25,15 @@ npx playwright test
 
 Release Notes:
 --------------
+
+**2.3.0** (23 June 2022)<br>
+Wait for networkidle, implicit and explicit.
+
+New actions:
+
+1. `wait` *"consider navigation to be finished when there are no more than 0 network connections for at least 500 ms."* &nbsp;[ref](https://www.checklyhq.com/docs/browser-checks/timeouts/). (`sleep` is deprecated!)
+2. `wait:all` experimental for odd cases. 
+3. `show` to debug text content, and `show:value` for *"input.value for the selected \<input> or \<textarea> or \<select> element."* &nbsp;[ref](https://playwright.dev/docs/api/class-elementhandle#element-handle-input-value)
 
 **2.2.2** (22 June 2022)<br>
 Quick regression fix in click.
