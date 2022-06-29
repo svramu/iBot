@@ -26,6 +26,12 @@ npx playwright test
 Release Notes:
 --------------
 
+**2.4.1** (29 June 2022, Wednesday)<br>
+Pause works in --headed mode.
+
+1. `pause` works in `--headed` mode.
+
+
 **2.4.0** (29 June 2022, Wednesday)<br>
 Console output revamp.
 

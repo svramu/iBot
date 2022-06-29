@@ -19,13 +19,14 @@ test('check all', async ({ page }) => {
 
   const wb = new Workbook()
   await wb.xlsx.readFile(consts.FILE!)
+  console.log('sheets: ', wb.worksheets.length)
+  if(consts.DEBUG_TRACE) console.log(wb.worksheets.map(w => w.name))
 
   const sheets = parseInts(consts.SHEET, wb)
   console.log(sheets)
 
   for (const sn of sheets) {
     const sheet = wb.getWorksheet(sn) //ISSUE! sometimes.
-    // const sheet = wb.worksheets[sn]
     console.log()
     console.log('Runnning sheet:', sn, sheet.name)
     console.log('---- ---- ---- ----')

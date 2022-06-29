@@ -99,6 +99,12 @@ export async function runSheet(sheet: Worksheet, page: Page) {
             await page.waitForLoadState('domcontentloaded', tos)
             break
           case 'print': console.log(consts.PRINT_TEMPLATE({ data: d })); break
+          case 'pause':
+            console.log(consts.LOG_RED, consts.LOG_BRIGHT, 'pause', consts.LOG_RESET,
+              consts.LOG_RED, 'works only in --headed mode.',
+              consts.LOG_RESET)
+            await page.pause();
+            break
           default:
             console.log(consts.LOG_RED, '\t', 'Warning: Unknown Action', consts.LOG_BRIGHT, a, consts.LOG_RESET)
         }

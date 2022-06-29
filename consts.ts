@@ -19,7 +19,7 @@ export const PRINT_TEMPLATE = Handlebars.compile(PRINT_FORMAT);
 export const COMMENT_FORMAT = process.env.COMMENT_FORMAT ?? ''
 export const COMMENT_TEMPLATE = Handlebars.compile(COMMENT_FORMAT)
 
-export const DEBUG_TRACE = JSON.parse(process.env.DEBUG_TRACE || 'false')
+export const DEBUG_TRACE = !!JSON.parse(process.env.DEBUG_TRACE || 'false')
 
 export const LOCATOR = +(process.env.LOCATOR ?? 3)
 export const ACTION = +(process.env.ACTION ?? 4)
