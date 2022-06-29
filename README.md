@@ -1,5 +1,5 @@
-**e2erunner 2.3.0**<br>
-*2022-06-23 Thursday*<br>
+**e2erunner 2.4.0**<br>
+*2022-06-29 Wednesday*<br>
 
 Prerequisites:
 --------------
@@ -26,6 +26,17 @@ npx playwright test
 Release Notes:
 --------------
 
+**2.4.0** (29 June 2022, Wednesday)<br>
+Console output revamp.
+
+1. `print` print what is needed with the `PRINT_FORMAT` defined in the `.env`
+2. `COMMAND_FORMAT` controls how a command row is displayed.
+3. `COMMENT_FORMAT` controls how a NON-command row is displayed.
+5. `DEBUG_TRACE` old behaviour for action, locator and data display.
+4. Growing code reorganized into multiple files.
+5. Fresh `npm install` required.
+
+
 **2.3.0** (23 June 2022)<br>
 Wait for networkidle, implicit and explicit.
 
@@ -35,8 +46,10 @@ New actions:
 2. `wait:all` experimental for odd cases. 
 3. `show` to debug text content, and `show:value` for *"input.value for the selected \<input> or \<textarea> or \<select> element."* &nbsp;[ref](https://playwright.dev/docs/api/class-elementhandle#element-handle-input-value)
 
+
 **2.2.2** (22 June 2022)<br>
 Quick regression fix in click.
+
 
 **2.2.1** (22 June 2022)<br>
 Action dblclick and sleep. Logs Colored.
@@ -60,8 +73,10 @@ Many new Actions.
 
 Each action is tested in a separate sheet.
 
+
 **2.1.0** (20 June 2022)<br>
 Action specific timeouts. 
+
 
 **2.0.0** (17 June 2022)<br>
 First Release with PlayWright. 

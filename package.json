@@ -12,6 +12,7 @@
   "dependencies": {
     "@playwright/test": "^1.22.2",
     "dotenv": "^16.0.1",
-    "exceljs": "^4.3.0"
+    "exceljs": "^4.3.0",
+    "handlebars": "^4.7.7"
   }
 }
