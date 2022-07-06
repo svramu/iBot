@@ -1,7 +1,10 @@
 import { expect, Page, Locator, FrameLocator } from '@playwright/test'
 import { Worksheet } from 'exceljs'
 import * as consts from './consts'
-import { nullempty, rexss } from './lib'
+import {
+  nullempty, printActionRow, printCommentRow, rexss, warn
+} from './lib'
+// import { IFmgr } from './ifmgr'
 
 
 export async function runSheet(sheet: Worksheet, page: Page) {
@@ -32,26 +35,34 @@ export async function runSheet(sheet: Worksheet, page: Page) {
       if (empties >= consts.MAX_EMPTIES) break
     } else {
       empties = 0
-      console.log(consts.COMMAND_TEMPLATE(cells))
-      if (consts.DEBUG_TRACE != null && consts.DEBUG_TRACE == true)
-        console.log('-', i, nullempty(action.value),
-          nullempty(locator.value), nullempty(data.value))
+      printActionRow(i, cells)
     }
 
-    if (action.isMerged || action.value == null || isHidden) {
-      console.log(consts.COMMENT_TEMPLATE(cells))
-    } else {
-      const parts: string[] = action.value.toString().split(',')
+    if (action.isMerged || action.value == null || isHidden) printCommentRow(i, cells)
+    else {
+
+      // General stuff: parse locator (l), action (a) and data (d) 
+      const l = (locator.value) ? locator.value.toString() : ''
+      const loc: Locator = ctx.locator(l)
+      const d = (data.value) ? data.value.toString() : ''
+      const raw_a = action.value.toString()
+
+      // Note down NEGATIVE events, or events!
+      const parts1: string[] = raw_a.split('?')
+      const main_a = parts1[0].trim().toLowerCase()
+      const event = parts1.length > 1 ? parts1[1].trim().toLowerCase() : null
+      // if (event) console.log('found event!', event)
+
+      // Comma seperator in action for Timeout in seconds
+      const parts: string[] = main_a.split(',')
       const a = parts[0].trim().toLowerCase()
-      let tos = {} //Timeout in seconds
-      let secs = 0 //Timeout in seconds
+      let tos = {}
+      let secs = 0
       if (parts.length == 2) {
         secs = +parts[1].trim()
         tos = { timeout: secs * 1000 }
-        // console.log('\ttimeout:', secs, 'second(s)')
-      } const l = (locator.value) ? locator.value.toString() : ''
-      const loc: Locator = ctx.locator(l)
-      const d = (data.value) ? data.value.toString() : ''
+      }
+
       try {
         switch (a) {
           case 'url': await page.goto(l); break
@@ -84,8 +95,7 @@ export async function runSheet(sheet: Worksheet, page: Page) {
             break
           case 'script': console.log('\t=', await page.evaluate(d, tos)); break
           case 'sleep':
-            console.log(consts.LOG_RED, '\t', 'Warning: sleep can make flaky tests. Try',
-              consts.LOG_BRIGHT, 'wait.', consts.LOG_RESET)
+            // warn("'sleep' can make flaky tests. Try", 'wait')
             await page.waitForTimeout(secs * 1000)
             break
           case 'noop': break
@@ -100,16 +110,14 @@ export async function runSheet(sheet: Worksheet, page: Page) {
             break
           case 'print': console.log(consts.PRINT_TEMPLATE({ data: d })); break
           case 'pause':
-            console.log(consts.LOG_RED, consts.LOG_BRIGHT, 'pause', consts.LOG_RESET,
-              consts.LOG_RED, 'works only in --headed mode.',
-              consts.LOG_RESET)
+            warn('works only in --headed mode', 'pause')
             await page.pause();
             break
           default:
-            console.log(consts.LOG_RED, '\t', 'Warning: Unknown Action', consts.LOG_BRIGHT, a, consts.LOG_RESET)
+            warn('Unknown Action', a)
         }
       } catch (err) {
-        console.log(i, "ERROR: ", err.name, err.message)
+        console.log(i, "ERROR: ", err.message.split(/\r?\n/)[0])
       }
     }
   }

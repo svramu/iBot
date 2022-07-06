@@ -1,8 +1,29 @@
 import { Workbook } from 'exceljs'
+import * as consts from './consts'
 
 
 export function rexss(text: string) { return new RegExp('.*' + text + '.*') }
 export function nullempty(text: any): string { return text ? text : '' }
+
+export function removeItemOnce(arr: any[], value: any) {
+  var index = arr.indexOf(value);
+  if (index > -1) {
+    arr.splice(index, 1);
+  }
+  return arr;
+}
+
+export function removeItemAll(arr: any[], value: any) {
+  var i = 0;
+  while (i < arr.length) {
+    if (arr[i] === value) {
+      arr.splice(i, 1);
+    } else {
+      ++i;
+    }
+  }
+  return arr;
+}
 
 export function parseInts(str: string, wb: Workbook): number[] {
   if (str == 'all') {
@@ -27,3 +48,29 @@ export function parseInts(str: string, wb: Workbook): number[] {
   return sheets
 }
 
+export function warn(msg: string, key: string = '') {
+  console.log(consts.LOG_RED, '\tWarning: ', msg, ':',
+    consts.LOG_BRIGHT, key, consts.LOG_RESET)
+}
+
+export function printPrint(msg: string) {
+  console.log(consts.PRINT_TEMPLATE({ data: msg }))
+}
+
+function printInternal(line: string) {
+  const ok = !consts.SKIP_EMPTIES || !!line.trim()
+  if (!consts.DEBUG_TRACE && ok) console.log(line)
+}
+export function printActionRow(row: number, cells: string[]) {
+  if (consts.DEBUG_TRACE) printTraceRow(row, cells)
+  else printInternal(consts.ACTION_TEMPLATE(cells))
+}
+export function printCommentRow(row: number, cells: string[]) {
+  printInternal(consts.COMMENT_TEMPLATE(cells))
+}
+
+export function printTraceRow(row: number, cells: string[]) {
+  const line = consts.TRACE_TEMPLATE(cells)
+  const ok = !consts.SKIP_EMPTIES || !!line
+  if (ok) console.log('-', row, line)
+}
