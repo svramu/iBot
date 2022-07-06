@@ -1,3 +1,6 @@
+import { TRACE } from "./consts"
+import { removeItemOnce } from "./lib"
+
 export class IFmgr {
   private readonly _events: string[] = []
   private readonly _ifstack: string[] = []
@@ -5,21 +8,35 @@ export class IFmgr {
 
   handleEvent(event: string, lineno: number) {
     this._events.push(event)
-    console.log(lineno, 'event:: ', event, ',', 'events:', this._events)
+    if (TRACE)
+      console.log(lineno, 'event:: ', this._events, event)
+
   }
-  handleIf(event: string, lineno: number) {
-    if (!!event && this._events.includes(event)) {
-      this._ifstack.push(event)
+  handleIf(cond: string, lineno: number) {
+    // Handling just boolean-not expression now, rest can wait. 
+    const not = cond.startsWith('!')
+    const event = not ? cond.slice(1) : cond
+    const condition = !not && this._events.includes(event) || not && !this._events.includes(event)
+    if (condition) {
+      this._ifstack.push(cond)
       this._ok = true
     } else {
       this._ok = false
     }
-    console.log(lineno, 'if:: ', 'event:', event, ',', 'ok:', this._ok)
+    if (TRACE)
+      console.log(lineno, 'if:: ', this._events, event)
   }
-  handleEndIf(lineno: number) {
+  handleEndIf(events: string, lineno: number) {
     this._ifstack.pop()
+    let events_clean: string[] = []
+    if (!!events) {
+      events_clean = events.split(',').map(e => e.trim())
+      events_clean.forEach(ev => removeItemOnce(this._events, ev))
+    }
+
     this._ok = true
-    console.log(lineno, 'endif:: ', 'ok:', this._ok)
+    if (TRACE)
+      console.log(lineno, 'endif:: ', this._events, events_clean)
   }
 
   get ok() {

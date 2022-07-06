@@ -21,7 +21,7 @@ export const COMMENT_TEMPLATE = Handlebars.compile(COMMENT_FORMAT)
 
 export const TRACE_FORMAT = process.env.TRACE_FORMAT ?? ''
 export const TRACE_TEMPLATE = Handlebars.compile(TRACE_FORMAT)
-export const DEBUG_TRACE = !!JSON.parse(process.env.DEBUG_TRACE || 'false')
+export const TRACE = !!JSON.parse(process.env.DEBUG_TRACE || 'false')
 export const SKIP_EMPTIES = !!JSON.parse(process.env.SKIP_EMPTIES || 'false')
 
 export const LOCATOR = +(process.env.LOCATOR ?? 3)

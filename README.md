@@ -1,5 +1,5 @@
-**e2erunner 2.4.0**<br>
-*2022-06-29 Wednesday*<br>
+**e2erunner 2.5.1**<br>
+*2022-07-06 Wednesday*<br>
 
 Prerequisites:
 --------------
@@ -25,6 +25,22 @@ npx playwright test
 
 Release Notes:
 --------------
+
+**2.5.1** (06 July 2022, Wednesday)<br>
+if with negation. endif events.
+
+1. `if !<event>` will start the block below it if the event has NOT happened.
+2. `endif <event>,<event>...` resets the `if`, and removes the listed events, so that it can be reused.
+3. obeys `TRACE`.
+
+
+**2.5.0** (06 July 2022, Wednesday)<br>
+Action: if endif works!
+
+1. `<action>?<event>` will store the `<event>` IFF the action FAILS.
+2. `if <event>` will start the block below it if the event has happened.
+3. `endif` resets the if block. You can nest the if blocks!
+
 
 **2.4.1** (29 June 2022, Wednesday)<br>
 Pause works in --headed mode.

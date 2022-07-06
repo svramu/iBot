@@ -1,16 +1,16 @@
 import { expect, Page, Locator, FrameLocator } from '@playwright/test'
 import { Worksheet } from 'exceljs'
-import * as consts from './consts'
 import {
   nullempty, printActionRow, printCommentRow, rexss, warn
 } from './lib'
 import { IFmgr } from './ifmgr'
+import {
+  ACTION, DATA, LOCATOR, MAX_EMPTIES, PRINT_TEMPLATE, TRACE
+} from './consts'
 
 
 export async function runSheet(sheet: Worksheet, page: Page) {
   let empties = 0
-  console.log('sheet row count:', sheet.rowCount)
-  console.log()
 
   const wait = async () => await page.waitForLoadState('networkidle')
 
@@ -28,13 +28,13 @@ export async function runSheet(sheet: Worksheet, page: Page) {
     }
 
     const isHidden = row.hidden
-    const action = row.getCell(consts.ACTION)
-    const locator = row.getCell(consts.LOCATOR)
-    const data = row.getCell(consts.DATA)
+    const action = row.getCell(ACTION)
+    const locator = row.getCell(LOCATOR)
+    const data = row.getCell(DATA)
 
     if (locator.value == null && action.value == null && data.value == null) {
       empties += 1
-      if (empties >= consts.MAX_EMPTIES) break
+      if (empties >= MAX_EMPTIES) break
     } else {
       empties = 0
       printActionRow(i, cells)
@@ -67,8 +67,8 @@ export async function runSheet(sheet: Worksheet, page: Page) {
 
       // Handle special structural action 'if' 
       if (!ifmgr.ok) { // If not meeting ALL the previous conditions, skip the line
-        console.log(i, '-- skipped!', a, d)
-        if (a == 'endif') ifmgr.handleEndIf(i)  // endif always resets one level.
+        if(TRACE) console.log(i, '-- skipped!', a)
+        if (a == 'endif') ifmgr.handleEndIf('', i)  // endif always resets one level.
         continue // skip line
       }
 
@@ -117,7 +117,7 @@ export async function runSheet(sheet: Worksheet, page: Page) {
             await page.waitForLoadState('load', tos)
             await page.waitForLoadState('domcontentloaded', tos)
             break
-          case 'print': console.log(consts.PRINT_TEMPLATE({ data: d })); break
+          case 'print': console.log(PRINT_TEMPLATE({ data: d })); break
           case 'pause':
             warn('works only in --headed mode', 'pause')
             await page.pause();
@@ -126,7 +126,7 @@ export async function runSheet(sheet: Worksheet, page: Page) {
             ifmgr.handleIf(d, i)
             break
           case 'endif':
-            ifmgr.handleEndIf(i) // All fine, just reset and proceed!
+            ifmgr.handleEndIf(d, i) // All fine, just reset and proceed!
             break // 
           default:
             warn('Unknown Action', a)
