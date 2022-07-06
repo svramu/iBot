@@ -4,7 +4,7 @@ import * as consts from './consts'
 import {
   nullempty, printActionRow, printCommentRow, rexss, warn
 } from './lib'
-// import { IFmgr } from './ifmgr'
+import { IFmgr } from './ifmgr'
 
 
 export async function runSheet(sheet: Worksheet, page: Page) {
@@ -16,6 +16,8 @@ export async function runSheet(sheet: Worksheet, page: Page) {
 
   const ctxStack: (Page | FrameLocator)[] = []
   let ctx: Page | FrameLocator = page
+
+  const ifmgr = new IFmgr()
 
   end:
   for (let i = 2; i <= sheet.rowCount; i++) {
@@ -61,6 +63,13 @@ export async function runSheet(sheet: Worksheet, page: Page) {
       if (parts.length == 2) {
         secs = +parts[1].trim()
         tos = { timeout: secs * 1000 }
+      }
+
+      // Handle special structural action 'if' 
+      if (!ifmgr.ok) { // If not meeting ALL the previous conditions, skip the line
+        console.log(i, '-- skipped!', a, d)
+        if (a == 'endif') ifmgr.handleEndIf(i)  // endif always resets one level.
+        continue // skip line
       }
 
       try {
@@ -113,11 +122,18 @@ export async function runSheet(sheet: Worksheet, page: Page) {
             warn('works only in --headed mode', 'pause')
             await page.pause();
             break
+          case 'if':
+            ifmgr.handleIf(d, i)
+            break
+          case 'endif':
+            ifmgr.handleEndIf(i) // All fine, just reset and proceed!
+            break // 
           default:
             warn('Unknown Action', a)
         }
       } catch (err) {
-        console.log(i, "ERROR: ", err.message.split(/\r?\n/)[0])
+        if (event) ifmgr.handleEvent(event, i)
+        else console.log(i, "ERROR: ", err.message.split(/\r?\n/)[0])
       }
     }
   }
