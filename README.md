@@ -1,4 +1,4 @@
-**e2erunner 2.6.0**<br>
+**iBot 2.6.0**<br>
 *2022-07-18 Monday*<br>
 
 Prerequisites:
