@@ -1,5 +1,5 @@
-**e2erunner 2.5.1**<br>
-*2022-07-06 Wednesday*<br>
+**e2erunner 2.6.0**<br>
+*2022-07-18 Monday*<br>
 
 Prerequisites:
 --------------
@@ -25,6 +25,12 @@ npx playwright test
 
 Release Notes:
 --------------
+
+**2.6.0** (18 July 2022, Monday)<br>
+Select single or multiple options.
+
+1. `select` action for select box with locator and the options (comma separated, if many) to locate, as data.
+
 
 **2.5.1** (06 July 2022, Wednesday)<br>
 if with negation. endif events.
