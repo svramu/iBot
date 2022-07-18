@@ -67,7 +67,7 @@ export async function runSheet(sheet: Worksheet, page: Page) {
 
       // Handle special structural action 'if' 
       if (!ifmgr.ok) { // If not meeting ALL the previous conditions, skip the line
-        if(TRACE) console.log(i, '-- skipped!', a)
+        if (TRACE) console.log(i, '-- skipped!', a)
         if (a == 'endif') ifmgr.handleEndIf('', i)  // endif always resets one level.
         continue // skip line
       }
@@ -92,6 +92,7 @@ export async function runSheet(sheet: Worksheet, page: Page) {
           case 'dblclick:text': await ctx.locator('text=' + l, tos).dblclick(tos); break
           case 'key': await loc.press(d, tos); break
           case 'keys:enter': await loc.press('Enter', tos); break
+          case 'select': await page.selectOption(l, d.split(',')); break
           case 'file': loc.setInputFiles(d); break
           case 'frame':
           case 'iframe':
