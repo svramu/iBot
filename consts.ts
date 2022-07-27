@@ -10,6 +10,7 @@ export const LOG_DIM = '\x1b[2m'
 export const LOG_RED = '\x1b[31m'
 
 export const FILE = process.env.FILE
+// SHEET = 1, 6, 6 - 9, 5 # or 'all' - sample format
 export const SHEET = (process.env.SHEET ?? 'all')
 
 export const ACTION_FORMAT = process.env.ACTION_FORMAT ?? ''
@@ -27,3 +28,5 @@ export const SKIP_EMPTIES = !!JSON.parse(process.env.SKIP_EMPTIES || 'false')
 export const LOCATOR = +(process.env.LOCATOR ?? 3)
 export const ACTION = +(process.env.ACTION ?? 4)
 export const DATA = +(process.env.DATA ?? 5)
+
+export const OUTPUT_LOG = 'output.log'

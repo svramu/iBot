@@ -6,38 +6,42 @@ import {
   DATA, FILE, LOCATOR, PRINT_FORMAT,
   SHEET, TRACE, TRACE_FORMAT,
 } from './consts'
-import { parseInts } from './lib'
+import { logAll, parseInts } from './lib'
 
 test('check all', async ({ page, context }) => {
 
-  console.log('FILE:', FILE)
-  console.log('SHEET:', SHEET)
+  logAll('FILE:', FILE)
+  logAll('SHEET:', SHEET)
 
-  console.log('LOCATOR:', LOCATOR)
-  console.log('ACTION:', ACTION)
-  console.log('DATA:', DATA)
-  console.log('ACTION_FORMAT:', ACTION_FORMAT)
-  console.log('PRINT_FORMAT:', PRINT_FORMAT)
-  console.log('COMMENT_FORMAT:', COMMENT_FORMAT)
+  logAll('LOCATOR:', LOCATOR)
+  logAll('ACTION:', ACTION)
+  logAll('DATA:', DATA)
+  logAll('ACTION_FORMAT:', ACTION_FORMAT)
+  logAll('PRINT_FORMAT:', PRINT_FORMAT)
+  logAll('COMMENT_FORMAT:', COMMENT_FORMAT)
 
-  console.log('TRACE_FORMAT:', TRACE_FORMAT)
-  console.log('DEBUG_TRACE:', TRACE)
+  logAll('TRACE_FORMAT:', TRACE_FORMAT)
+  logAll('DEBUG_TRACE:', TRACE)
 
   const wb = new Workbook()
   await wb.xlsx.readFile(FILE!)
-  console.log('sheets: ', wb.worksheets.length)
-  if (TRACE) console.log(wb.worksheets.map(w => w.name))
+  logAll('sheets: ', wb.worksheets.length)
+  if (TRACE) logAll(wb.worksheets.map(w => w.name))
 
   const sheets = parseInts(SHEET, wb)
-  console.log(sheets)
+  logAll(sheets)
 
   for (const sn of sheets) {
     const sheet = wb.getWorksheet(sn) //ISSUE! sometimes.
-    console.log()
-    console.log('Runnning sheet:', sn, sheet.name, `${sheet.rowCount} row(s)`)
-    console.log('---- ---- ---- ----')
+    logAll()
+    logAll('Runnning sheet:', sn, sheet.name, `- ${sheet.rowCount} row(s)`)
+    logAll('---- ---- ---- ----')
     await runSheet(sheet, page, context)
   }
+
+  logAll()
+  logAll('---------- xxxx ----------')
+  logAll()
 
 })
 

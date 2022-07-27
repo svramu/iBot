@@ -1,5 +1,5 @@
 import { TRACE } from "./consts"
-import { removeItemOnce } from "./lib"
+import { logAll, removeItemOnce } from "./lib"
 
 export class IFmgr {
   private readonly _events: string[] = []
@@ -9,7 +9,7 @@ export class IFmgr {
   handleEvent(event: string, lineno: number) {
     this._events.push(event)
     if (TRACE)
-      console.log(lineno, 'event:: ', this._events, event)
+      logAll(lineno, 'event:: ', this._events, event)
 
   }
   handleIf(cond: string, lineno: number) {
@@ -24,7 +24,7 @@ export class IFmgr {
       this._ok = false
     }
     if (TRACE)
-      console.log(lineno, 'if:: ', this._events, event)
+      logAll(lineno, 'if:: ', this._events, event)
   }
   handleEndIf(events: string, lineno: number) {
     this._ifstack.pop()
@@ -36,7 +36,7 @@ export class IFmgr {
 
     this._ok = true
     if (TRACE)
-      console.log(lineno, 'endif:: ', this._events, events_clean)
+      logAll(lineno, 'endif:: ', this._events, events_clean)
   }
 
   get ok() {

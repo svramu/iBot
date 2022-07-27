@@ -1,7 +1,8 @@
 import { expect, Page, Locator, FrameLocator, BrowserContext } from '@playwright/test'
 import { Worksheet } from 'exceljs'
 import {
-  nullempty, peek, printActionRow, printCommentRow, rexss, warn
+  nullempty, logActionRow, logCommentRow, rexss,
+  logWarn, logAll
 } from './lib'
 import { IFmgr } from './ifmgr'
 import {
@@ -38,10 +39,10 @@ export async function runSheet(sheet: Worksheet, page: Page, context: BrowserCon
       if (empties >= MAX_EMPTIES) break
     } else {
       empties = 0
-      printActionRow(i, cells)
+      logActionRow(i, cells)
     }
 
-    if (action.isMerged || action.value == null || isHidden) printCommentRow(i, cells)
+    if (action.isMerged || action.value == null || isHidden) logCommentRow(i, cells)
     else {
 
       // General stuff: parse locator (l), action (a) and data (d) 
@@ -54,7 +55,7 @@ export async function runSheet(sheet: Worksheet, page: Page, context: BrowserCon
       const parts1: string[] = raw_a.split('?')
       const main_a = parts1[0].trim().toLowerCase()
       const event = parts1.length > 1 ? parts1[1].trim().toLowerCase() : null
-      // if (event) console.log('found event!', event)
+      // if (event) logAll('found event!', event)
 
       // Comma seperator in action for Timeout in seconds
       const parts: string[] = main_a.split(',')
@@ -68,7 +69,7 @@ export async function runSheet(sheet: Worksheet, page: Page, context: BrowserCon
 
       // Handle special structural action 'if' 
       if (!ifmgr.ok) { // If not meeting ALL the previous conditions, skip the line
-        if (TRACE) console.log(i, '-- skipped!', a)
+        if (TRACE) logAll(i, '-- skipped!', a)
         if (a == 'endif') ifmgr.handleEndIf('', i)  // endif always resets one level.
         continue // skip line
       }
@@ -120,24 +121,24 @@ export async function runSheet(sheet: Worksheet, page: Page, context: BrowserCon
             ctx = ctxStack.pop()!
             break
 
-          case 'script': console.log('\t=', await page.evaluate(d, tos)); break
+          case 'script': logAll('\t=', await page.evaluate(d, tos)); break
           case 'sleep':
             // warn("'sleep' can make flaky tests. Try", 'wait')
             await page.waitForTimeout(secs * 1000)
             break
           case 'noop': break
           case 'end': break end
-          case 'show': await wait(); console.log(await loc.textContent()); break
-          case 'show:value': await wait(); console.log(await loc.inputValue()); break
+          case 'show': await wait(); logAll(await loc.textContent()); break
+          case 'show:value': await wait(); logAll(await loc.inputValue()); break
           case 'wait': await wait(); break
           case 'wait:all':
             await page.waitForLoadState('networkidle', tos)
             await page.waitForLoadState('load', tos)
             await page.waitForLoadState('domcontentloaded', tos)
             break
-          case 'print': console.log(PRINT_TEMPLATE({ data: d })); break
+          case 'print': logAll(PRINT_TEMPLATE({ data: d })); break
           case 'pause':
-            warn('works only in --headed mode', 'pause')
+            logWarn('works only in --headed mode', 'pause')
             await page.pause();
             break
           case 'if':
@@ -147,11 +148,11 @@ export async function runSheet(sheet: Worksheet, page: Page, context: BrowserCon
             ifmgr.handleEndIf(d, i) // All fine, just reset and proceed!
             break // 
           default:
-            warn('Unknown Action', a)
+            logWarn('Unknown Action', a)
         }
       } catch (err) {
         if (event) ifmgr.handleEvent(event, i)
-        else console.log(i, "ERROR: ", err.message.split(/\r?\n/)[0])
+        else logAll(i, "ERROR: ", err.message.split(/\r?\n/)[0])
       }
     }
   }

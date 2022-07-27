@@ -1,4 +1,4 @@
-**iBot 2.7.0**<br>
+**iBot 2.8.0**<br>
 *2022-07-27 Wednesday*<br>
 
 Prerequisites:
@@ -25,6 +25,10 @@ npx playwright test
 
 Release Notes:
 --------------
+
+**2.8.0** (27 July 2022, Wdnesday)<br>
+Logs same, both in console and to a file.
+
 
 **2.7.0** (27 July 2022, Wdnesday)<br>
 Tab catch, go in and out recursively.

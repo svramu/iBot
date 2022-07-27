@@ -2,9 +2,9 @@ import { Workbook } from 'exceljs'
 import {
   ACTION_TEMPLATE, COMMENT_TEMPLATE, TRACE,
   LOG_BRIGHT, LOG_RED, LOG_RESET,
-  PRINT_TEMPLATE, SKIP_EMPTIES, TRACE_TEMPLATE,
+  PRINT_TEMPLATE, SKIP_EMPTIES, TRACE_TEMPLATE, OUTPUT_LOG,
 } from './consts';
-
+import * as fs from 'fs';
 
 export function rexss(text: string) { return new RegExp('.*' + text + '.*') }
 export function nullempty(text: any): string { return text ? text : '' }
@@ -47,36 +47,50 @@ export function parseInts(str: string, wb: Workbook): number[] {
       }
     }
   })
-  // console.log(sheets0)
+  // logAll(sheets0)
   const sheets = [...new Set(sheets0)]
-  // console.log(sheets)
+  // logAll(sheets)
   sheets.sort((a, b) => a - b)
   return sheets
 }
 
-export function warn(msg: string, key: string = '') {
-  console.log(LOG_RED, '\tWarning: ', msg, ':',
-    LOG_BRIGHT, key, LOG_RESET)
+function logFile(...msgs: any[]) {
+  const msg = msgs.join(' ') + '\n'
+  fs.writeFileSync(OUTPUT_LOG, msg, { encoding: "utf8", flag: "a" });
+}
+function logConsole(msg?: any, ...msgs: any[]) {
+  if (msg == null) console.log()
+  else console.log(msg, ...msgs) // NOTE: Only place where console.log is used.
+}
+export function logAll(...msgs: any[]) {
+  logConsole(...msgs)
+  logFile(...msgs)
 }
 
-export function printPrint(msg: string) {
-  console.log(PRINT_TEMPLATE({ data: msg }))
+export function logWarn(msg: string, key: string = '') {
+  logConsole(LOG_RED, '\tWarning: ', msg, ':',
+    LOG_BRIGHT, key, LOG_RESET)
+  logFile('\tWarning: ', msg, ' : ', key)
+}
+
+export function logPrint(msg: string) {
+  logAll(PRINT_TEMPLATE({ data: msg }))
 }
 
 function printInternal(line: string) {
   const ok = !SKIP_EMPTIES || !!line.trim()
-  if (!TRACE && ok) console.log(line)
+  if (!TRACE && ok) logAll(line)
 }
-export function printActionRow(row: number, cells: string[]) {
-  if (TRACE) printTraceRow(row, cells)
+export function logActionRow(row: number, cells: string[]) {
+  if (TRACE) logTraceRow(row, cells)
   else printInternal(ACTION_TEMPLATE(cells))
 }
-export function printCommentRow(row: number, cells: string[]) {
+export function logCommentRow(row: number, cells: string[]) {
   printInternal(COMMENT_TEMPLATE(cells))
 }
 
-export function printTraceRow(row: number, cells: string[]) {
+export function logTraceRow(row: number, cells: string[]) {
   const line = TRACE_TEMPLATE(cells)
   const ok = !SKIP_EMPTIES || !!line
-  if (ok) console.log('-', row, line)
+  if (ok) logAll('-', row, line)
 }
