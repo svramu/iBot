@@ -2,7 +2,7 @@ import { expect, Page, Locator, FrameLocator, BrowserContext } from '@playwright
 import { Worksheet } from 'exceljs'
 import {
   nullempty, logActionRow, logCommentRow, rexss,
-  logWarn, logAll
+  logWarn, logAll, ACTION_TIMER
 } from './lib'
 import { IFmgr } from './ifmgr'
 import {
@@ -23,6 +23,8 @@ export async function runSheet(sheet: Worksheet, page: Page, context: BrowserCon
 
   end:
   for (let i = 2; i <= sheet.rowCount; i++) {
+    ACTION_TIMER.start()
+
     const row = sheet.getRow(i)
     const cells: string[] = [''] // NOTE: to allow 1 based cell count.
     for (let i = 1; i < 10; i++) { // NOTE: only 10 cells considered.
@@ -39,7 +41,6 @@ export async function runSheet(sheet: Worksheet, page: Page, context: BrowserCon
       if (empties >= MAX_EMPTIES) break
     } else {
       empties = 0
-      logActionRow(i, cells)
     }
 
     if (action.isMerged || action.value == null || isHidden) logCommentRow(i, cells)
@@ -154,6 +155,7 @@ export async function runSheet(sheet: Worksheet, page: Page, context: BrowserCon
         if (event) ifmgr.handleEvent(event, i)
         else logAll(i, "ERROR: ", err.message.split(/\r?\n/)[0])
       }
+      logActionRow(i, cells)
     }
   }
 }

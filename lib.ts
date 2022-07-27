@@ -5,6 +5,7 @@ import {
   PRINT_TEMPLATE, SKIP_EMPTIES, TRACE_TEMPLATE, OUTPUT_LOG,
 } from './consts';
 import * as fs from 'fs';
+import moment from 'moment';
 
 export function rexss(text: string) { return new RegExp('.*' + text + '.*') }
 export function nullempty(text: any): string { return text ? text : '' }
@@ -79,9 +80,10 @@ export function logPrint(msg: string) {
 
 function printInternal(line: string) {
   const ok = !SKIP_EMPTIES || !!line.trim()
-  if (!TRACE && ok) logAll(line)
+  if (!TRACE && ok) logAll(line, ACTION_TIMER.end())
 }
 export function logActionRow(row: number, cells: string[]) {
+  TOTAL_SUMMARY.incAction()
   if (TRACE) logTraceRow(row, cells)
   else printInternal(ACTION_TEMPLATE(cells))
 }
@@ -92,5 +94,72 @@ export function logCommentRow(row: number, cells: string[]) {
 export function logTraceRow(row: number, cells: string[]) {
   const line = TRACE_TEMPLATE(cells)
   const ok = !SKIP_EMPTIES || !!line
-  if (ok) logAll('-', row, line)
+  if (ok) logAll('-', row, line, ACTION_TIMER.end())
 }
+
+export function logSheetClose() {
+  logAll('Sheet time:', SHEET_TIMER.end())
+}
+
+// -----------------------------------------------------------------------------
+
+class GapTimer {
+  private TIMER_START = 0
+
+  start() {
+    this.TIMER_START = Date.now()
+  }
+
+  end(): string {
+    const elapsed = Date.now() - this.TIMER_START
+    return GapTimer.humanizeDuration(elapsed)
+  }
+
+  static humanizeDuration(ms: number): string {
+    let FACTOR = 1000
+    const cms = '' + ms % FACTOR
+    const s = Math.floor(ms / FACTOR)
+    FACTOR = 60
+    const cs = s % FACTOR
+    const m = Math.floor(s / FACTOR)
+    FACTOR = 60
+    const cm = m % FACTOR
+    const h = Math.floor(m / FACTOR)
+    FACTOR = 24
+    const ch = h % FACTOR
+    const d = Math.floor(h / FACTOR)
+    const scms = cms.padStart(3, '0')
+    let out = ' = '
+    if (d > 0) out += d + 'd-'
+    if (ch > 0) out += ch + ':'
+    if (cm > 0) out += cm + ':'
+    out += cs + '.' + scms
+    // out += ' [' + ms + ']'
+    return out
+  }
+}
+
+export const ACTION_TIMER = new GapTimer()
+export const SHEET_TIMER = new GapTimer()
+export const TOTAL_TIMER = new GapTimer()
+
+// -----------------------------------------------------------------------------
+
+class Summary {
+  private ACTIONS_COUNT = 0
+  private CHECKS_COUNT = 0
+
+  incAction() { this.ACTIONS_COUNT++ }
+  incCheck() { this.CHECKS_COUNT++ }
+  reset() {
+    this.ACTIONS_COUNT = 0
+    this.CHECKS_COUNT = 0
+  }
+
+  get actions() { return this.ACTIONS_COUNT }
+  get checks() { return this.CHECKS_COUNT }
+}
+
+export const TOTAL_SUMMARY = new Summary()
+
+// -----------------------------------------------------------------------------

@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import Handlebars from 'handlebars'
+import moment from 'moment'
 
 
 export const MAX_EMPTIES = 10
@@ -30,3 +31,10 @@ export const ACTION = +(process.env.ACTION ?? 4)
 export const DATA = +(process.env.DATA ?? 5)
 
 export const OUTPUT_LOG = 'output.log'
+
+// -----------------------------------------------------------------------------
+
+export function humanNowDateTime() {
+  return moment().format('LLLL')
+}
+
