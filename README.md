@@ -1,5 +1,5 @@
-**iBot 2.6.0**<br>
-*2022-07-18 Monday*<br>
+**iBot 2.7.0**<br>
+*2022-07-27 Wednesday*<br>
 
 Prerequisites:
 --------------
@@ -25,6 +25,13 @@ npx playwright test
 
 Release Notes:
 --------------
+
+**2.7.0** (27 July 2022, Wdnesday)<br>
+Tab catch, go in and out recursively.
+
+1. `click:tab` and `tab:back` actions for catching, going in and out of tabs recursively.
+(Test case in the sheet `tab`)
+
 
 **2.6.0** (18 July 2022, Monday)<br>
 Select single or multiple options.

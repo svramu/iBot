@@ -1,7 +1,7 @@
-import { expect, Page, Locator, FrameLocator } from '@playwright/test'
+import { expect, Page, Locator, FrameLocator, BrowserContext } from '@playwright/test'
 import { Worksheet } from 'exceljs'
 import {
-  nullempty, printActionRow, printCommentRow, rexss, warn
+  nullempty, peek, printActionRow, printCommentRow, rexss, warn
 } from './lib'
 import { IFmgr } from './ifmgr'
 import {
@@ -9,11 +9,12 @@ import {
 } from './consts'
 
 
-export async function runSheet(sheet: Worksheet, page: Page) {
+export async function runSheet(sheet: Worksheet, page: Page, context: BrowserContext) {
   let empties = 0
 
   const wait = async () => await page.waitForLoadState('networkidle')
 
+  const popStack: Page[] = []
   const ctxStack: (Page | FrameLocator)[] = []
   let ctx: Page | FrameLocator = page
 
@@ -75,8 +76,8 @@ export async function runSheet(sheet: Worksheet, page: Page) {
       try {
         switch (a) {
           case 'url': await page.goto(l); break
-          case 'title': await expect(page).toHaveTitle(rexss(d), tos); break
-          case 'title:exact': await expect(page).toHaveTitle(d, tos); break
+          case 'title': await expect(ctx as Page).toHaveTitle(rexss(d), tos); break
+          case 'title:exact': await expect(ctx as Page).toHaveTitle(d, tos); break
           case 'attrib:href': await expect(loc).toHaveAttribute('href', rexss(d), tos); break
           case 'attrib:href:exact': await expect(loc).toHaveAttribute('href', d, tos); break
           case 'assert': await expect(loc).toHaveText(rexss(d), tos); break
@@ -90,10 +91,25 @@ export async function runSheet(sheet: Worksheet, page: Page) {
           case 'click:text':
           case 'link:text': await ctx.locator('text=' + l, tos).click(tos); break
           case 'dblclick:text': await ctx.locator('text=' + l, tos).dblclick(tos); break
+
+          case 'click:tab':
+            const [newPage] = await Promise.all([
+              context.waitForEvent('page', { timeout: secs }),
+              await loc.click(tos)
+            ])
+            await newPage.waitForLoadState()
+            popStack.push(ctx as Page)
+            ctx = newPage
+            break
+          case 'tab:back':
+            ctx = popStack.pop()!
+            break
+
           case 'key': await loc.press(d, tos); break
-          case 'keys:enter': await loc.press('Enter', tos); break
+          case 'key:enter': await loc.press('Enter', tos); break
           case 'select': await page.selectOption(l, d.split(',')); break
           case 'file': loc.setInputFiles(d); break
+
           case 'frame':
           case 'iframe':
             ctxStack.push(ctx)
@@ -103,6 +119,7 @@ export async function runSheet(sheet: Worksheet, page: Page) {
           case 'iframe:back':
             ctx = ctxStack.pop()!
             break
+
           case 'script': console.log('\t=', await page.evaluate(d, tos)); break
           case 'sleep':
             // warn("'sleep' can make flaky tests. Try", 'wait')

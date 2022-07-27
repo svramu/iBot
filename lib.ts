@@ -8,6 +8,7 @@ import {
 
 export function rexss(text: string) { return new RegExp('.*' + text + '.*') }
 export function nullempty(text: any): string { return text ? text : '' }
+export function peek(array: any[]) { return array[array.length - 1] }
 
 export function removeItemOnce(arr: any[], value: any) {
   var index = arr.indexOf(value);

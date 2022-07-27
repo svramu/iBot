@@ -8,7 +8,7 @@ import {
 } from './consts'
 import { parseInts } from './lib'
 
-test('check all', async ({ page }) => {
+test('check all', async ({ page, context }) => {
 
   console.log('FILE:', FILE)
   console.log('SHEET:', SHEET)
@@ -36,7 +36,7 @@ test('check all', async ({ page }) => {
     console.log()
     console.log('Runnning sheet:', sn, sheet.name, `${sheet.rowCount} row(s)`)
     console.log('---- ---- ---- ----')
-    await runSheet(sheet, page)
+    await runSheet(sheet, page, context)
   }
 
 })
