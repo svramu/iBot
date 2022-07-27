@@ -28,6 +28,7 @@ Release Notes:
 
 **2.8.0** (27 July 2022, Wdnesday)<br>
 Logs same, both in console and to a file.
+(Stop tracking output.log in git)
 
 
 **2.7.0** (27 July 2022, Wdnesday)<br>
