@@ -2,7 +2,7 @@ import { Workbook } from 'exceljs'
 import {
   ACTION_TEMPLATE, COMMENT_TEMPLATE, TRACE,
   LOG_BRIGHT, LOG_RED, LOG_RESET,
-  PRINT_TEMPLATE, SKIP_EMPTIES, TRACE_TEMPLATE, OUTPUT_LOG,
+  PRINT_TEMPLATE, SKIP_EMPTIES, TRACE_TEMPLATE, OUTPUT_LOG, envget,
 } from './consts';
 import * as fs from 'fs';
 import moment from 'moment';
@@ -164,9 +164,15 @@ export const TOTAL_SUMMARY = new Summary()
 
 // -----------------------------------------------------------------------------
 
-export function replaceVars(input: string, vars: { [vid: string]: string; }) {
-  const rx = /{{\s*([\w\.]+)\s*}}/g // mustash model {{var}}
-  const out = input.replace(rx, (m, c) => vars[c])
+function getvar(vr: string, vars: { [vid: string]: string }) {
+  let out = vars[vr] // NOTE: first try with local variables.
+  if (out == null) out = envget(vr) // NOTE: Then from the .env file.
+  return out
+}
+
+export function replaceVars(input: string, vars: { [vid: string]: string }) {
+  const rx = /{{\s*([\w\.]+)\s*}}/g // mustache model {{var}}
+  const out = input.replace(rx, (m, c) => getvar(c, vars))
   if (TRACE && input != out) console.log("-->", input, out)
   return out
 }

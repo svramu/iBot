@@ -26,6 +26,14 @@ npx playwright test
 Release Notes:
 --------------
 
+**2.11.0** (12 August 2022, Friday)<br>
+`{{var}}` takes value from `.env` file if not in local.
+
+1. `.env` file key-values can be used as secrets or global variables.
+(for now, only the col spec is useful for running, but optional)
+(see `var_set` tab in the sample-tests.xlsx)
+
+
 **2.10.0** (12 August 2022, Friday)<br>
 `var` action and fresh `output.log` on every run.
 

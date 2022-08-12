@@ -1,29 +1,38 @@
-NOW: Friday, August 12, 2022 5:53 PM
+NOW: Friday, August 12, 2022 6:41 PM
 FILE: sample-tests.xlsx
 SHEET: 15
 LOCATOR: 3
 ACTION: 4
 DATA: 5
 ACTION_FORMAT: 
-PRINT_FORMAT: {{data}}
+PRINT_FORMAT: 
 COMMENT_FORMAT: {{1}} {{2}}
 TRACE_FORMAT: {{4}} - {{5}}
-DEBUG_TRACE: false
+DEBUG_TRACE: true
 sheets:  15
+basics,key,timeout,keys,script,attrib_href,iframe,sleep,dblclick,file,pause,if_endif,select,tab,var_set
 15
 
 Runnning sheet: 15 var_set - 24 row(s)
 ---- ---- ---- ----
-sheet - action - var   = 0.010
- try 1  = 0.000
-something
-xxMuiltiple windows
-multi
-Sheet time:  = 3.236
+- 4 url -   = 3.860
+- 5 title - Window  = 0.219
+- 6 var - myvar1  = 0.030
+
+- 7 print - something  = 0.003
+
+- 8 print - xx{{myvar1}}  = 0.005
+- 9 var:set - myvar2  = 0.001
+
+- 10 print - {{myvar2}}  = 0.003
+- 11 assert - Muiltiple windows  = 0.071
+
+- 14 print - {{MYVAR}}  = 0.005
+Sheet time:  = 4.257
 
 
 ----
-TOTAL TIME:  = 3.486
-TOTAL ACTIONS: 8
+TOTAL TIME:  = 4.751
+TOTAL ACTIONS: 9
 ---------- xxxx ----------
 
