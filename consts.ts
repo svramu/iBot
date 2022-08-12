@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import Handlebars from 'handlebars'
 import moment from 'moment'
+import * as fs from 'fs'
 
 
 export const MAX_EMPTIES = 10
@@ -31,6 +32,8 @@ export const ACTION = +(process.env.ACTION ?? 4)
 export const DATA = +(process.env.DATA ?? 5)
 
 export const OUTPUT_LOG = 'output.log'
+fs.writeFileSync(OUTPUT_LOG, '', { encoding: "utf8", flag: "w" })
+// recreate once, when started.
 
 // -----------------------------------------------------------------------------
 

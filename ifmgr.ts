@@ -46,13 +46,14 @@ export class IFmgr {
 
 // -----------------------------------------------------------------------------
 
+// standalone test: 'ts-node ifmgr.ts' 
 // if (require.main !== module) process.exit()
 
 // const ifmgr = new IFmgr()
 
-// ifmgr.handleEvent('miss')
-// ifmgr.handleIf('hiss')
+// ifmgr.handleEvent('miss', 10)
+// ifmgr.handleIf('hiss', 20)
 // ifmgr.ok
-// ifmgr.handleIf('miss')
+// ifmgr.handleIf('miss', 30)
 // ifmgr.ok
-// ifmgr.handleEndIf()
+// ifmgr.handleEndIf("miss", 40)

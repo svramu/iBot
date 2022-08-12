@@ -163,3 +163,39 @@ class Summary {
 export const TOTAL_SUMMARY = new Summary()
 
 // -----------------------------------------------------------------------------
+
+export function replaceVars(input: string, vars: { [vid: string]: string; }) {
+  const rx = /{{\s*([\w\.]+)\s*}}/g // mustash model {{var}}
+  const out = input.replace(rx, (m, c) => vars[c])
+  if (TRACE && input != out) console.log("-->", input, out)
+  return out
+}
+
+// -----------------------------------------------------------------------------
+
+// standalone test: 'ts-node lib.ts' 
+
+// -----------------------------------------------------------------------------
+
+// function test_replaceVars() {
+//   const input = "bingo is {{myvar}} here, and even the {{myvar2}} knows!"
+//   const predict = "bingo is 123 here, and even the 007 knows!"
+//   const vars = { "myvar": "123", "myvar2": "007" }
+//   const transed = replaceVars(input, vars)
+//   console.assert(transed == predict, "test replaceVars - " + transed)
+// }
+
+// function test_replaceVars_none() {
+//   const input = "bingo is here"
+//   const predict = "bingo is here"
+//   const vars = { "myvar": "123", "myvar2": "007" }
+//   const transed = replaceVars(input, vars)
+//   console.assert(transed == predict, "test replaceVars - " + transed)
+// }
+
+// test_replaceVars()
+// test_replaceVars_none()
+
+// -----------------------------------------------------------------------------
+
+// logPrint("test local")

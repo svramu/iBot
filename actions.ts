@@ -2,11 +2,11 @@ import { expect, Page, Locator, FrameLocator, BrowserContext } from '@playwright
 import { Worksheet } from 'exceljs'
 import {
   nullempty, logActionRow, logCommentRow, rexss,
-  logWarn, logAll, ACTION_TIMER
+  logWarn, logAll, ACTION_TIMER, replaceVars, logPrint
 } from './lib'
 import { IFmgr } from './ifmgr'
 import {
-  ACTION, DATA, LOCATOR, MAX_EMPTIES, PRINT_TEMPLATE, TRACE
+  ACTION, DATA, LOCATOR, MAX_EMPTIES, TRACE
 } from './consts'
 
 
@@ -20,6 +20,7 @@ export async function runSheet(sheet: Worksheet, page: Page, context: BrowserCon
   let ctx: Page | FrameLocator = page
 
   const ifmgr = new IFmgr()
+  const vars = {}
 
   end:
   for (let i = 2; i <= sheet.rowCount; i++) {
@@ -47,9 +48,13 @@ export async function runSheet(sheet: Worksheet, page: Page, context: BrowserCon
     else {
 
       // General stuff: parse locator (l), action (a) and data (d) 
-      const l = (locator.value) ? locator.value.toString() : ''
+      const raw_l = (locator.value) ? locator.value.toString() : ''
+      const l = replaceVars(raw_l, vars)
       const loc: Locator = ctx.locator(l)
-      const d = (data.value) ? data.value.toString() : ''
+
+      const raw_d = (data.value) ? data.value.toString() : ''
+      const d = replaceVars(raw_d, vars)
+
       const raw_a = action.value.toString()
 
       // Note down NEGATIVE events, or events!
@@ -115,7 +120,7 @@ export async function runSheet(sheet: Worksheet, page: Page, context: BrowserCon
           case 'frame':
           case 'iframe':
             ctxStack.push(ctx)
-            ctx = await ctx.frameLocator(l)
+            ctx = ctx.frameLocator(l)
             break
           case 'frame:back':
           case 'iframe:back':
@@ -137,7 +142,8 @@ export async function runSheet(sheet: Worksheet, page: Page, context: BrowserCon
             await page.waitForLoadState('load', tos)
             await page.waitForLoadState('domcontentloaded', tos)
             break
-          case 'print': logAll(PRINT_TEMPLATE({ data: d })); break
+          case 'print':
+            logPrint(d); break
           case 'pause':
             logWarn('works only in --headed mode', 'pause')
             await page.pause();
@@ -147,7 +153,14 @@ export async function runSheet(sheet: Worksheet, page: Page, context: BrowserCon
             break
           case 'endif':
             ifmgr.handleEndIf(d, i) // All fine, just reset and proceed!
-            break // 
+            break
+          case 'var':
+            const val = await loc.textContent()
+            vars[d] = val
+            break
+          case 'var:set':
+            vars[d] = l
+            break
           default:
             logWarn('Unknown Action', a)
         }

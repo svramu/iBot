@@ -26,6 +26,15 @@ npx playwright test
 Release Notes:
 --------------
 
+**2.10.0** (12 August 2022, Friday)<br>
+`var` action and fresh `output.log` on every run.
+
+1. `var` action stores the locator's text in the variable name given in the data column.
+2. Now, this var name can be used as `{{var}}` in locator or data column.
+3. You can also set the var directly as `var:set` with the locator column as value.
+4. All this is within the same sheet. 
+
+
 **2.9.0** (27 July 2022, Wdnesday)<br>
 Action and Sheet timings with total summary.
 
