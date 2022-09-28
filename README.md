@@ -1,5 +1,5 @@
-**iBot 2.9.0**<br>
-*2022-07-27 Wednesday*<br>
+**iBot 2.12.0**<br>
+*2022-08-28 Wednesday*<br>
 
 Prerequisites:
 --------------
@@ -25,6 +25,14 @@ npx playwright test
 
 Release Notes:
 --------------
+
+**2.12.0** (28 September 2022, Wednesday)<br>
+`files` action, and others. First code contribution!
+
+1. `files` action, for non-input multiple files upload. No sample sheet!
+2. Show worksheets with index.
+3. Full error.
+
 
 **2.11.0** (12 August 2022, Friday)<br>
 `{{var}}` takes value from `.env` file if not in local.

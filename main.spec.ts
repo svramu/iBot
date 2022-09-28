@@ -29,10 +29,10 @@ test('check all', async ({ page, context }) => {
   await wb.xlsx.readFile(FILE!)
   logAll('sheets: ', wb.worksheets.length)
   //if (TRACE) logAll(wb.worksheets.map(w => w.name))
-    //Worksheet name and index
-    wb.eachSheet((worksheet, sheetId) => {
-      logAll(worksheet.name, sheetId);
-    });
+  //Worksheet name and index
+  wb.eachSheet((worksheet, sheetId) => {
+    logAll(sheetId, worksheet.name);
+  })
 
   const sheets = parseInts(SHEET, wb)
   logAll(sheets)

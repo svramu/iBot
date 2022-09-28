@@ -127,7 +127,8 @@ export async function runSheet(
           case "keys":
             await loc.fill(d, tos);
             break;
-          // case 'dnd': await page.dragAndDrop(l, d, tos); break //TBD: Is it working?!
+          // case 'dnd': await page.dragAndDrop(l, d, tos); break 
+          //TBD: Is it working?!
           case "click":
             await loc.click(tos);
             break;
@@ -172,17 +173,6 @@ export async function runSheet(
           case "files":
             page.on("filechooser", async (filechooser) => {
               logAll("fileChooser", d);
-
-              await filechooser.setFiles(d.split(","));
-            });
-            await page().click(l, { force: true });
-            break;
-
-          //add multiple files from Browser Open Dialog
-          case "files":
-            page.on("filechooser", async (filechooser) => {
-              logAll("fileChooser", d);
-
               await filechooser.setFiles(d.split(","));
             });
             await page.click(l, { force: true });
@@ -250,7 +240,7 @@ export async function runSheet(
         }
       } catch (err) {
         if (event) ifmgr.handleEvent(event, i);
-        else logAll(i, "ERROR: ", err.message.split(/\r?\n/)[0]);
+        else logAll(i, "ERROR: ", err.message);
       }
       logActionRow(i, cells);
     }
