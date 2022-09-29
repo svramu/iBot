@@ -1,5 +1,5 @@
-**iBot 2.12.0**<br>
-*2022-08-28 Wednesday*<br>
+**iBot 2.13.0**<br>
+*2022-08-29 Thursday*<br>
 
 Prerequisites:
 --------------
@@ -25,6 +25,13 @@ npx playwright test
 
 Release Notes:
 --------------
+
+**2.13.0** (29 September 2022, Thursday)<br>
+assert value and text. clarify non-regex escape. 
+
+1. `assert:value` and `assert:value:exact` actions, for input tags. Sample: `basics` sheet
+2. Clarification: for assert not-exact, use `\` back slash escape for regex chars like *,.,? etc.
+
 
 **2.12.0** (28 September 2022, Wednesday)<br>
 `files` action, and others. First code contribution!

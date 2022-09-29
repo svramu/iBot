@@ -97,9 +97,7 @@ export async function runSheet(
 
       try {
         switch (a) {
-          case "url":
-            await page.goto(l);
-            break;
+          case "url": await page.goto(l); break;
           case "title":
             await expect(ctx as Page).toHaveTitle(rexss(d), tos);
             break;
@@ -112,29 +110,21 @@ export async function runSheet(
           case "attrib:href:exact":
             await expect(loc).toHaveAttribute("href", d, tos);
             break;
-          case "assert":
-            await expect(loc).toHaveText(rexss(d), tos);
+          case "assert": await expect(loc).toHaveText(rexss(d), tos); break;
+          case "assert:value":
+            await expect(loc).toHaveValue(rexss(d), tos);
             break;
-          case "assert:exact":
-            await expect(loc).toHaveText(d, tos);
+          case "assert:value:exact":
+            await expect(loc).toHaveValue(d, tos);
             break;
-          case "exists":
-            await expect(loc).not.toHaveCount(0, tos);
-            break;
-          case "exists:not":
-            await expect(loc).toHaveCount(0, tos);
-            break;
-          case "keys":
-            await loc.fill(d, tos);
-            break;
+          case "assert:exact": await expect(loc).toHaveText(d, tos); break;
+          case "exists": await expect(loc).not.toHaveCount(0, tos); break;
+          case "exists:not": await expect(loc).toHaveCount(0, tos); break;
+          case "keys": await loc.fill(d, tos); break;
           // case 'dnd': await page.dragAndDrop(l, d, tos); break 
           //TBD: Is it working?!
-          case "click":
-            await loc.click(tos);
-            break;
-          case "dblclick":
-            await loc.dblclick(tos);
-            break;
+          case "click": await loc.click(tos); break;
+          case "dblclick": await loc.dblclick(tos); break;
           case "click:text":
           case "link:text":
             await ctx.locator("text=" + l, tos).click(tos);
@@ -152,22 +142,12 @@ export async function runSheet(
             popStack.push(ctx as Page);
             ctx = newPage;
             break;
-          case "tab:back":
-            ctx = popStack.pop()!;
-            break;
+          case "tab:back": ctx = popStack.pop()!; break;
 
-          case "key":
-            await loc.press(d, tos);
-            break;
-          case "key:enter":
-            await loc.press("Enter", tos);
-            break;
-          case "select":
-            await page.selectOption(l, d.split(","));
-            break;
-          case "file":
-            loc.setInputFiles(d);
-            break;
+          case "key": await loc.press(d, tos); break;
+          case "key:enter": await loc.press("Enter", tos); break;
+          case "select": await page.selectOption(l, d.split(",")); break;
+          case "file": loc.setInputFiles(d); break;
 
           //add multiple files from Browser Open Dialog
           case "files":
@@ -184,9 +164,7 @@ export async function runSheet(
             ctx = ctx.frameLocator(l);
             break;
           case "frame:back":
-          case "iframe:back":
-            ctx = ctxStack.pop()!;
-            break;
+          case "iframe:back": ctx = ctxStack.pop()!; break;
 
           case "script":
             logAll("\t=", await page.evaluate(d, tos));
@@ -195,10 +173,8 @@ export async function runSheet(
             // warn("'sleep' can make flaky tests. Try", 'wait')
             await page.waitForTimeout(secs * 1000);
             break;
-          case "noop":
-            break;
-          case "end":
-            break end;
+          case "noop": break;
+          case "end": break end;
           case "show":
             await wait();
             logAll(await loc.textContent());
@@ -215,28 +191,20 @@ export async function runSheet(
             await page.waitForLoadState("load", tos);
             await page.waitForLoadState("domcontentloaded", tos);
             break;
-          case "print":
-            logPrint(d);
-            break;
+          case "print": logPrint(d); break;
           case "pause":
             logWarn("works only in --headed mode", "pause");
             await page.pause();
             break;
-          case "if":
-            ifmgr.handleIf(d, i);
-            break;
-          case "endif":
-            ifmgr.handleEndIf(d, i); // All fine, just reset and proceed!
-            break;
+          case "if": ifmgr.handleIf(d, i); break;
+          // All fine, just reset and proceed!
+          case "endif": ifmgr.handleEndIf(d, i); break;
           case "var":
             const val = await loc.textContent();
             vars[d] = val;
             break;
-          case "var:set":
-            vars[d] = l;
-            break;
-          default:
-            logWarn("Unknown Action", a);
+          case "var:set": vars[d] = l; break;
+          default: logWarn("Unknown Action", a);
         }
       } catch (err) {
         if (event) ifmgr.handleEvent(event, i);
