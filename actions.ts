@@ -121,7 +121,7 @@ export async function runSheet(
           case "exists": await expect(loc).not.toHaveCount(0, tos); break;
           case "exists:not": await expect(loc).toHaveCount(0, tos); break;
           case "keys": await loc.fill(d, tos); break;
-          // case 'dnd': await page.dragAndDrop(l, d, tos); break 
+          case 'dnd': await page.dragAndDrop(l, d, tos); break 
           //TBD: Is it working?!
           case "click": await loc.click(tos); break;
           case "dblclick": await loc.dblclick(tos); break;
@@ -146,6 +146,10 @@ export async function runSheet(
 
           case "key": await loc.press(d, tos); break;
           case "key:enter": await loc.press("Enter", tos); break;
+          case "key:clear":
+            await loc.press("Control+A", tos);
+            await loc.press("Backspace", tos);
+            break; 
           case "select": await page.selectOption(l, d.split(",")); break;
           case "file": loc.setInputFiles(d); break;
 
