@@ -121,7 +121,7 @@ export async function runSheet(
           case "exists": await expect(loc).not.toHaveCount(0, tos); break;
           case "exists:not": await expect(loc).toHaveCount(0, tos); break;
           case "keys": await loc.fill(d, tos); break;
-          // case 'dnd': await page.dragAndDrop(l, d, tos); break 
+          case 'dnd': await page.dragAndDrop(l, d, tos); break 
           //TBD: Is it working?!
           case "click": await loc.click(tos); break;
           case "dblclick": await loc.dblclick(tos); break;
