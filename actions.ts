@@ -154,7 +154,9 @@ export async function runSheet(
             page.on("filechooser", async (filechooser) => {
               logAll("fileChooser", d);
               await filechooser.setFiles(d.split(","));
-            });
+            }); break;
+          //Take a ScreenShot
+            case "screenshot": await page.screenshot({ path: d, fullPage: true }); break;
             await page.click(l, { force: true });
             break;
 
