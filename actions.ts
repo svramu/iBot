@@ -157,7 +157,8 @@ export async function runSheet(
             });
             await page.click(l, { force: true });
             break;
-
+          //Take a ScreenShot
+          case "screenshot": await page.screenshot({ path: d, fullPage: true }); break; 
           case "frame":
           case "iframe":
             ctxStack.push(ctx);
