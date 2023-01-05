@@ -5,7 +5,7 @@ import {
   FrameLocator,
   BrowserContext,
 } from "@playwright/test";
-import { Worksheet } from "exceljs";
+import { Workbook, Worksheet } from "exceljs";
 import {
   nullempty,
   logActionRow,
@@ -19,6 +19,19 @@ import {
 } from "./lib";
 import { IFmgr } from "./ifmgr";
 import { ACTION, DATA, LOCATOR, MAX_EMPTIES, TRACE } from "./consts";
+
+export async function runSheetById(
+  wb: Workbook,
+  sn: number,
+  page: Page,
+  context: BrowserContext
+){
+  const sheet = wb.getWorksheet(sn);
+  logAll()
+  logAll('Running sheet:', sn, sheet.name, `- ${sheet.rowCount} row(s)`)
+  logAll('---- ---- ---- ----')
+  await runSheet(sheet, page, context);
+}
 
 export async function runSheet(
   sheet: Worksheet,
@@ -150,12 +163,13 @@ export async function runSheet(
           case "file": loc.setInputFiles(d); break;
 
           //add multiple files from Browser Open Dialog
+          //bug fix for on page event changed to Promise
           case "files":
-            page.on("filechooser", async (filechooser) => {
-              logAll("fileChooser", d);
-              await filechooser.setFiles(d.split(","));
-            });
+            logAll("fileChooser", d);
+            const fileChooserPromise = page.waitForEvent('filechooser');
             await page.click(l, { force: true });
+            const fileChooser = await fileChooserPromise;
+            await fileChooser.setFiles(d.split(","));
             break;
           //Take a ScreenShot
           case "screenshot": await page.screenshot({ path: d, fullPage: true }); break; 
