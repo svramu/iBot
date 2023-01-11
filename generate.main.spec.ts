@@ -70,7 +70,7 @@ test.describe('iBot Tests',()=>{
               const value = testCaseRows.get(index);
               codeTestCase += (
                 `
-                test('${worksheet.name}  => ${value}-${index}', async()=>{
+                test('${worksheet.name}  => ${String(index).padStart(3, '0')}-${value}', async()=>{
                   await runSheet(wb.getWorksheet('${worksheet.name}'), page, ctx, ${index}, ${nextIndex})
                 })
                             
