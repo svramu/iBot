@@ -5,6 +5,7 @@ import {
   PRINT_TEMPLATE, SKIP_EMPTIES, TRACE_TEMPLATE, OUTPUT_LOG, envget,
 } from './consts';
 import * as fs from 'fs';
+import { join } from 'path';
 import moment from 'moment';
 
 export function rexss(text: string) { return new RegExp('.*' + text + '.*') }
@@ -53,6 +54,15 @@ export function parseInts(str: string, wb: Workbook): number[] {
   // logAll(sheets)
   sheets.sort((a, b) => a - b)
   return sheets
+}
+
+export function syncReadFile(filename: string) {
+  const result = fs.readFileSync(join(__dirname, filename), 'utf-8');
+  return result;
+}
+
+export function syncWriteFile(filename: string, data: string) {
+  fs.writeFileSync(join(__dirname, filename), data, { encoding: "utf8"});
 }
 
 function logFile(...msgs: any[]) {

@@ -5,7 +5,7 @@ import {
   FrameLocator,
   BrowserContext,
 } from "@playwright/test";
-import { Workbook, Worksheet } from "exceljs";
+import { Worksheet } from "exceljs";
 import {
   nullempty,
   logActionRow,
@@ -20,23 +20,181 @@ import {
 import { IFmgr } from "./ifmgr";
 import { ACTION, DATA, LOCATOR, MAX_EMPTIES, TRACE } from "./consts";
 
-export async function runSheetById(
-  wb: Workbook,
-  sn: number,
+export function getTestCases(
+  sheet: Worksheet,
   page: Page,
   context: BrowserContext
-){
-  const sheet = wb.getWorksheet(sn);
-  logAll()
-  logAll('Running sheet:', sn, sheet.name, `- ${sheet.rowCount} row(s)`)
-  logAll('---- ---- ---- ----')
-  await runSheet(sheet, page, context);
+  ){
+  let empties = 0;
+
+
+
+  let boolIf = false;
+  let testCases = new Map<number,string>();
+  let testCase = ''
+  const vars = {};
+
+  end: for (let i = 2; i <= sheet.rowCount; i++) {
+
+    ACTION_TIMER.start();
+
+    const row = sheet.getRow(i);
+    const cells: string[] = [""]; // NOTE: to allow 1 based cell count.
+    for (let i = 1; i < 10; i++) {
+      // NOTE: only 10 cells considered.
+      cells.push(nullempty(row.getCell(i).value));
+    }
+
+    const isHidden = row.hidden;
+    const action = row.getCell(ACTION);
+    const locator = row.getCell(LOCATOR);
+    const data = row.getCell(DATA);
+
+    if (locator.value == null && action.value == null && data.value == null) {
+      empties += 1;
+      if (empties >= MAX_EMPTIES) break;
+      continue
+    } else {
+      empties = 0;
+    }
+
+    if (action.isMerged || action.value == null || isHidden)
+      logCommentRow(i, cells);
+    else {
+      // General stuff: parse locator (l), action (a) and data (d)
+      const raw_l = locator.value ? locator.value.toString() : "";
+      const l = replaceVars(raw_l, vars);
+
+      const raw_d = data.value ? data.value.toString() : "";
+      const d = replaceVars(raw_d, vars);
+
+      const raw_a = action.value.toString();
+
+      // Note down NEGATIVE events, or events!
+      const parts1: string[] = raw_a.split("?");
+      const main_a = parts1[0].trim().toLowerCase();
+      const event = parts1.length > 1 ? parts1[1].trim().toLowerCase() : null;
+      // if (event) logAll('found event!', event)
+
+      // Comma separator in action for Timeout in seconds
+      const parts: string[] = main_a.split(",");
+      const a = parts[0].trim().toLowerCase();
+      testCase = a;
+
+      if ((boolIf) && (a == "endif")) {
+        boolIf = false;
+        continue;
+      }
+      if (boolIf) continue;
+   
+
+      try {
+        switch (a) {
+          case "url":  break;
+          case "title": break;
+            
+          case "title:exact": break;
+      
+          case "attrib:href":break;
+            
+          case "attrib:href:exact":
+            
+            break;
+          case "assert":  break;
+          case "assert:value":
+            
+            break;
+          case "assert:value:exact":
+            
+            break;
+          case "assert:exact": break;
+          case "exists":  break;
+          case "exists:not": break;
+          case "keys":  break;
+          case 'dnd':  break;
+          //TBD: Is it working?!
+          case "click": break;
+          case "dblclick": break;
+          case "click:text":
+          case "link:text":
+            
+            break;
+          case "dblclick:text":
+           
+            break;
+
+          case "click:tab":
+
+            break;
+          case "tab:back":  break;
+
+          case "key": break;
+          case "key:enter": break;
+          case "select":  break;
+          case "file":  break;
+
+          //add multiple files from Browser Open Dialog
+          case "files":
+            break;
+          //Take a ScreenShot
+          case "screenshot": break; 
+          case "frame":
+          case "iframe":
+           
+            break;
+          case "frame:back":
+          case "iframe:back":  break;
+
+          case "script":
+            
+            break;
+          case "sleep":
+            
+            break;
+          case "noop": break;
+          case "end": break end;
+          case "show":
+            
+            break;
+          case "show:value":
+           
+            break;
+          case "wait":
+            
+            break;
+          case "wait:all":
+           
+            break;
+          case "print":  break;
+          case "pause":
+           
+            break;
+          case "if": boolIf = true; break;
+          case "endif": break;
+          case "var":
+            
+            break;
+          case "var:set":  break;
+          default: logWarn("Unknown Action", a);
+        }
+      } catch (err) {
+         logAll(i, "ERROR: ", err.message);
+      }
+      //logActionRow(i, cells);
+
+    }
+    testCases.set(i, testCase)
+    //if(TRACE) logAll(i, cells);
+  }
+  return testCases;
 }
 
 export async function runSheet(
   sheet: Worksheet,
   page: Page,
-  context: BrowserContext
+  context: BrowserContext,
+  startRow: number = 0,
+  endRow: number = 0
 ) {
   let empties = 0;
 
@@ -49,7 +207,9 @@ export async function runSheet(
   const ifmgr = new IFmgr();
   const vars = {};
 
-  end: for (let i = 2; i <= sheet.rowCount; i++) {
+  if (startRow==0) startRow = 2;
+  if (endRow==0) startRow = sheet.rowCount;
+  end: for (let i = startRow; i <= endRow; i++) {
     ACTION_TIMER.start();
 
     const row = sheet.getRow(i);
@@ -90,7 +250,7 @@ export async function runSheet(
       const event = parts1.length > 1 ? parts1[1].trim().toLowerCase() : null;
       // if (event) logAll('found event!', event)
 
-      // Comma seperator in action for Timeout in seconds
+      // Comma separator in action for Timeout in seconds
       const parts: string[] = main_a.split(",");
       const a = parts[0].trim().toLowerCase();
       let tos = {};
