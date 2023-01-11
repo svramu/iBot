@@ -51,7 +51,7 @@ test.afterAll(async ({ browser }) => {
   logAll()
   browser.close;
 })
-//SHEET_TIMER.start()
+SHEET_TIMER.start()
 /*{{code}}*/
-//logSheetClose()
+logSheetClose()
 })
