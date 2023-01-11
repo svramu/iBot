@@ -71,7 +71,7 @@ test.describe('iBot Tests',()=>{
               codeTestCase += (
                 `
                 test('${worksheet.name}  => ${value}-${index}', async()=>{
-                  await runSheet(wb.getWorksheet('${worksheet.name}'), page, ctx,${index},${nextIndex})
+                  await runSheet(wb.getWorksheet('${worksheet.name}'), page, ctx, ${index}, ${nextIndex})
                 })
                             
                 `)
@@ -101,20 +101,4 @@ test.describe('iBot Tests',()=>{
   })
 })
 
-// test.describe('Run Sheets',()=>{
-//   test('Run Sheet', async () => {
-//     const sheets = parseInts(SHEET, wb)
-//     logAll(sheets)
 
-//     for (const sn of sheets) {
-//       const sheet = wb.getWorksheet(sn) //ISSUE! sometimes.
-//       logAll()
-//       logAll('Runnning sheet:', sn, sheet.name, `- ${sheet.rowCount} row(s)`)
-//       logAll('---- ---- ---- ----')
-//       SHEET_TIMER.start()
-//       await runSheet(sheet, page, ctx)
-//       logSheetClose()
-//       logAll()          
-//     }
-//   })
-// })
