@@ -1,5 +1,6 @@
 import { test } from '@playwright/test'
 import { Workbook } from 'exceljs'
+import { log } from 'handlebars/runtime'
 import { runSheet, getTestCases } from './actions'
 import {
   ACTION, ACTION_FORMAT, COMMENT_FORMAT,
@@ -63,9 +64,9 @@ test.describe('iBot Tests',()=>{
       if(sheets.includes(sheetId)){
          const testCaseRows = getTestCases(worksheet,page,ctx)
          if(testCaseRows.size==0) logAll("ERROR: NO TEST CASE FOUND!" );
-         for (let i = 0; i <= testCaseRows.size; i++) {
+         for (let i = 0; i < testCaseRows.size; i++) {
               const index = Array.from(testCaseRows.keys())[i];
-              const nextIndex = Array.from(testCaseRows.keys())[i+1]-1;
+              const nextIndex = i==(testCaseRows.size-1)? index : Array.from(testCaseRows.keys())[i+1]-1;
               const value = testCaseRows.get(index);
               codeTestCase += (
                 `
