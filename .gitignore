@@ -1,5 +1,6 @@
 node_modules/
 allure*/
 test-results/
+main.spec.runEachTest.ts
 output.log
 _
