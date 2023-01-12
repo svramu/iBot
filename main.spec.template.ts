@@ -7,9 +7,14 @@ import {
   SHEET, TRACE, TRACE_FORMAT,
 } from './consts'
 import { logAll, logSheetClose, parseInts, SHEET_TIMER, TOTAL_SUMMARY, TOTAL_TIMER } from './lib'
+let page;
+let ctx;
 
-test('check all', async ({ page, context }, testInfo) => {
+test.describe('iBot Tests',()=>{
+  const wb = new Workbook()
 
+test.beforeAll(async ({browser}) => {
+  logAll('***************Before iBot Tests...')
   TOTAL_TIMER.start()
   logAll('NOW:', humanNowDateTime())
   logAll('FILE:', FILE)
@@ -25,35 +30,28 @@ test('check all', async ({ page, context }, testInfo) => {
   logAll('TRACE_FORMAT:', TRACE_FORMAT)
   logAll('DEBUG_TRACE:', TRACE)
 
-  const wb = new Workbook()
+  
   await wb.xlsx.readFile(FILE!)
-  logAll('sheets: ', wb.worksheets.length)
-  //if (TRACE) logAll(wb.worksheets.map(w => w.name))
-  //Worksheet name and index
-  wb.eachSheet((worksheet, sheetId) => {
-    logAll(sheetId, worksheet.name);
-  })
+  // logAll('sheets: ', wb.worksheets.length)
+  // //if (TRACE) logAll(wb.worksheets.map(w => w.name))
+  // //Worksheet name and index
+  // wb.eachSheet((worksheet, sheetId) => {
+  //   logAll(sheetId, worksheet.name);
+  // })
+  ctx = await browser.newContext();
+  page = await ctx.newPage();
+});
 
-  const sheets = parseInts(SHEET, wb)
-  logAll(sheets)
-
-  for (const sn of sheets) {
-    const sheet = wb.getWorksheet(sn) //ISSUE! sometimes.
-    logAll()
-    logAll('Runnning sheet:', sn, sheet.name, `- ${sheet.rowCount} row(s)`)
-    logAll('---- ---- ---- ----')
-    SHEET_TIMER.start()
-    await runSheet(sheet, page, context, 0, 0, testInfo)
-    logSheetClose()
-    logAll()
-  }
-
-  logAll()
+test.afterAll(async ({ browser }) => {
+  logAll('*****************After iBot Tests...')
   logAll('----')
   logAll('TOTAL TIME:', TOTAL_TIMER.end())
   logAll('TOTAL ACTIONS:', TOTAL_SUMMARY.actions)
   logAll('---------- xxxx ----------')
   logAll()
-
+  browser.close;
 })
-
+SHEET_TIMER.start()
+/*{{code}}*/
+logSheetClose()
+})

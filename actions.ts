@@ -194,9 +194,9 @@ export async function runSheet(
   sheet: Worksheet,
   page: Page,
   context: BrowserContext,
+  testInfo: TestInfo,
   startRow: number = 0,
   endRow: number = 0,
-  testInfo: TestInfo
 ) {
   let empties = 0;
 
@@ -210,7 +210,7 @@ export async function runSheet(
   const vars = {};
 
   if (startRow==0) startRow = 2;
-  if (endRow==0) startRow = sheet.rowCount;
+  if (endRow==0) endRow = sheet.rowCount;
   end: for (let i = startRow; i <= endRow; i++) {
     ACTION_TIMER.start();
 
