@@ -1,4 +1,4 @@
-import { test } from '@playwright/test'
+import { test} from '@playwright/test'
 import { Workbook } from 'exceljs'
 import { log } from 'handlebars/runtime'
 import { runSheet, getTestCases } from './actions'
@@ -70,8 +70,8 @@ test.describe('iBot Tests',()=>{
               const value = testCaseRows.get(index);
               codeTestCase += (
                 `
-                test('${worksheet.name}  => ${String(index).padStart(3, '0')}-${value}', async()=>{
-                  await runSheet(wb.getWorksheet('${worksheet.name}'), page, ctx, ${index}, ${nextIndex})
+                test('${worksheet.name}  => ${String(index).padStart(3, '0')}-${value}', async({}, testInfo)=>{
+                  await runSheet(wb.getWorksheet('${worksheet.name}'), page, ctx, ${index}, ${nextIndex}, testInfo)
                 })
                             
                 `)

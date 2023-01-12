@@ -4,6 +4,7 @@ import {
   Locator,
   FrameLocator,
   BrowserContext,
+  TestInfo,
 } from "@playwright/test";
 import { Worksheet } from "exceljs";
 import {
@@ -194,7 +195,8 @@ export async function runSheet(
   page: Page,
   context: BrowserContext,
   startRow: number = 0,
-  endRow: number = 0
+  endRow: number = 0,
+  testInfo: TestInfo
 ) {
   let empties = 0;
 
@@ -332,7 +334,10 @@ export async function runSheet(
             await fileChooser.setFiles(d.split(","));
             break;
           //Take a ScreenShot
-          case "screenshot": await page.screenshot({ path: d, fullPage: true }); break; 
+          case "screenshot": 
+          const screenshot = await page.screenshot({ fullPage: true }); 
+            await testInfo.attach('screenshot', { body: screenshot, contentType: 'image/png' });
+            break; 
           case "frame":
           case "iframe":
             ctxStack.push(ctx);

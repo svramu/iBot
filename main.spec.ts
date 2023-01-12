@@ -1,4 +1,4 @@
-import { test } from '@playwright/test'
+import { test, TestInfo } from '@playwright/test'
 import { Workbook } from 'exceljs'
 import { runSheet } from './actions'
 import {
