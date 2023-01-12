@@ -57,9 +57,9 @@ test.describe('iBot Tests',()=>{
 
   test('generate code', async()=>{
     let codeSheet = ''
-    let codeTestCase = ''
 
     wb.eachSheet((worksheet, sheetId) => {
+      let codeTestCase = ''
       const sheets = parseInts(SHEET, wb)
       if(sheets.includes(sheetId)){
          const testCaseRows = getTestCases(worksheet,page,ctx)
