@@ -51,8 +51,8 @@ test.describe('iBot Tests',()=>{
     logAll('TOTAL TIME:', TOTAL_TIMER.end())
     logAll('TOTAL ACTIONS:', TOTAL_SUMMARY.actions)
     logAll('---------- xxxx ----------')
-    browser.close;
     logAll()
+    browser.close;
   })
 
   test('generate code', async()=>{
@@ -71,7 +71,7 @@ test.describe('iBot Tests',()=>{
               codeTestCase += (
                 `
                 test('${worksheet.name}  => ${String(index).padStart(3, '0')}-${value}', async({}, testInfo)=>{
-                  await runSheet(wb.getWorksheet('${worksheet.name}'), page, ctx, ${index}, ${nextIndex}, testInfo)
+                  await runSheet(wb.getWorksheet('${worksheet.name}'), page, ctx, testInfo, ${index}, ${nextIndex})
                 })
                             
                 `)
@@ -82,11 +82,6 @@ test.describe('iBot Tests',()=>{
                   logAll('Running sheet: ${worksheet.name} - ${worksheet.rowCount} row(s)')
                   logAll('---- ---- ---- ----')
                   SHEET_TIMER.start()
-                  
-                  // test('Running sheet--${worksheet.name}--', async()=>{
-                  //   await runSheet(wb.getWorksheet('${worksheet.name}'), page, ctx)
-                  // })
-                  
                   ${codeTestCase}
                   logSheetClose()
                   logAll() 

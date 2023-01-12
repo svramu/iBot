@@ -40,7 +40,7 @@ test('check all', async ({ page, context }, testInfo) => {
   for (const sn of sheets) {
     const sheet = wb.getWorksheet(sn) //ISSUE! sometimes.
     logAll()
-    logAll('Runnning sheet:', sn, sheet.name, `- ${sheet.rowCount} row(s)`)
+    logAll('Running sheet:', sn, sheet.name, `- ${sheet.rowCount} row(s)`)
     logAll('---- ---- ---- ----')
     SHEET_TIMER.start()
     await runSheet(sheet, page, context, 0, 0, testInfo)

@@ -22,9 +22,23 @@ Run:
 ```
 npx playwright test
 ```
+This command runs all the test cases in the excel with in a single test case. Test results are captured in `output.log` 
+
+```
+runtest.bat
+```
+This command runs each excel sheet in `test.describe` and each test in excel sheet are run as separate test case. Generates the <b>Allure Report</b> for playwright https://docs.qameta.io/allure/
+
+![alt text](./media/allurereport.png)
 
 Release Notes:
 --------------
+**3.0.0** (12 January 2023)<br>
+Added Allure Report
+Run each excel sheet in `test.describe` each test in separate test case  
+Added screenshot action to test case `screenshot` integrated with Allure Report
+
+`runtest.bat` command file added 
 
 **2.13.0** (29 September 2022, Thursday)<br>
 assert value and text. clarify non-regex escape. 
