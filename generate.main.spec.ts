@@ -96,8 +96,8 @@ test.describe('iBot Tests',()=>{
     })
     const mainspec = syncReadFile('./main.spec.ts')
     let newmainspec = mainspec.replace('/*{{code}}*/',codeSheet)
-    syncWriteFile('./main.spec.new.ts',newmainspec)
-    logAll('main.spec.new.ts file generated')
+    syncWriteFile('./main.spec.runEachTest.ts',newmainspec)
+    logAll('main.spec.runEachTest.ts file generated')
   })
 })
 
