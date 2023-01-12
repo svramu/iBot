@@ -14,7 +14,7 @@ test.describe('iBot Tests',()=>{
   const wb = new Workbook()
 
 test.beforeAll(async ({browser}) => {
-  logAll('***************Before iBot Tests...')
+  logAll('Before iBot Tests...')
   TOTAL_TIMER.start()
   logAll('NOW:', humanNowDateTime())
   logAll('FILE:', FILE)
@@ -32,18 +32,13 @@ test.beforeAll(async ({browser}) => {
 
   
   await wb.xlsx.readFile(FILE!)
-  // logAll('sheets: ', wb.worksheets.length)
-  // //if (TRACE) logAll(wb.worksheets.map(w => w.name))
-  // //Worksheet name and index
-  // wb.eachSheet((worksheet, sheetId) => {
-  //   logAll(sheetId, worksheet.name);
-  // })
+  //Init the context and page for all the test cases
   ctx = await browser.newContext();
   page = await ctx.newPage();
 });
 
 test.afterAll(async ({ browser }) => {
-  logAll('*****************After iBot Tests...')
+  logAll('After iBot Tests...')
   logAll('----')
   logAll('TOTAL TIME:', TOTAL_TIMER.end())
   logAll('TOTAL ACTIONS:', TOTAL_SUMMARY.actions)
@@ -51,7 +46,6 @@ test.afterAll(async ({ browser }) => {
   logAll()
   browser.close;
 })
-SHEET_TIMER.start()
+//Placeholder for the generated code 
 /*{{code}}*/
-logSheetClose()
 })
