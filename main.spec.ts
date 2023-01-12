@@ -43,7 +43,7 @@ test('check all', async ({ page, context }, testInfo) => {
     logAll('Running sheet:', sn, sheet.name, `- ${sheet.rowCount} row(s)`)
     logAll('---- ---- ---- ----')
     SHEET_TIMER.start()
-    await runSheet(sheet, page, context, 0, 0, testInfo)
+    await runSheet(sheet, page, context, testInfo, 0, 0)
     logSheetClose()
     logAll()
   }
