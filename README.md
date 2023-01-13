@@ -44,7 +44,7 @@ Added Allure Report
 Run each excel sheet in `test.describe` each test in separate test case  
 Added screenshot action to test case `screenshot` integrated with Allure Report
 
-`runtest.bat` command file added 
+`runtest.bat` and `runtest.sh` command file added 
 
 **2.13.0** (29 September 2022, Thursday)<br>
 assert value and text. clarify non-regex escape. 
