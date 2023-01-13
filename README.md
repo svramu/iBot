@@ -3,7 +3,8 @@
 
 Prerequisites:
 --------------
-Install [nodejs](https://nodejs.org/en/download/) 16+ (LTS)
+Install [nodejs](https://nodejs.org/en/download/) 16+ (LTS)<br>
+Install [jre(jdk)](https://www.java.com/en/download/) 8+
 
 
 Install:
