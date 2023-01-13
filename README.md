@@ -1,5 +1,5 @@
-**iBot 2.13.0**<br>
-*2022-08-29 Thursday*<br>
+**iBot 3.00.0**<br>
+*2023-01-12 Thursday*<br>
 
 Prerequisites:
 --------------
