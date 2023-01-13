@@ -1,6 +1,6 @@
 echo "Running Test Case Generation..."  
 rm -rf allure-results
-set isodate = $(date '+%Y-%m-%d-%H-%M-%S')
+isodate=$(date '+%Y-%m-%d-%H-%M-%S')
 npx playwright test generate.main.spec.ts
 echo "Running Test Cases..."
 npx playwright test main.spec.runEachTest.ts --reporter=line,allure-playwright 
