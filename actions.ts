@@ -95,6 +95,8 @@ export async function runSheet(
         continue; // skip line
       }
 
+      // await browserType.browser()..launchPersistentContext('.', { downloadsPath})
+
       try {
         switch (a) {
           case "url": await page.goto(l); break;
@@ -205,6 +207,14 @@ export async function runSheet(
             vars[d] = val;
             break;
           case "var:set": vars[d] = l; break;
+          case "test-download":
+            const [x] = await Promise.all([
+              page.waitForEvent("download", { timeout: secs }),
+              await loc.click(tos),
+            ]);
+            const path = await x.path();
+            console.log("#.#", path)
+            break;
           default: logWarn("Unknown Action", a);
         }
       } catch (err) {

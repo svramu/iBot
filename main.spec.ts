@@ -9,6 +9,7 @@ import {
 import { logAll, logSheetClose, parseInts, SHEET_TIMER, TOTAL_SUMMARY, TOTAL_TIMER } from './lib'
 
 test('check all', async ({ page, context }) => {
+  // console.log(context.br)
 
   TOTAL_TIMER.start()
   logAll('NOW:', humanNowDateTime())
