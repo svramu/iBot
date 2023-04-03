@@ -29,9 +29,10 @@ Release Notes:
 **2.14.0** (3rd April 2023, Monday)<br>
 Three new locators matching codegen - beta. 
 
-1. `!<role>|<name>|<true>` to match codgen getByRole
-2. `!!<input>` to match codgen getByPlaceholder
-3. `!!!<text>` to match codgen getByText
+1. `!<role>|<name>|<true>` locator to match codgen getByRole
+2. `!!<input>` locator to match codgen getByPlaceholder
+3. `!!!<text>` locator to match codgen getByText
+4. `reload` action to reload the page.
 
 
 **2.13.0** (29 September 2022, Thursday)<br>
