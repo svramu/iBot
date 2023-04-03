@@ -16,6 +16,7 @@ import {
   ACTION_TIMER,
   replaceVars,
   logPrint,
+  locate,
 } from "./lib";
 import { IFmgr } from "./ifmgr";
 import { ACTION, DATA, LOCATOR, MAX_EMPTIES, TRACE } from "./consts";
@@ -64,7 +65,7 @@ export async function runSheet(
       // General stuff: parse locator (l), action (a) and data (d)
       const raw_l = locator.value ? locator.value.toString() : "";
       const l = replaceVars(raw_l, vars);
-      const loc: Locator = ctx.locator(l);
+      const loc: Locator = locate(ctx, l)
 
       const raw_d = data.value ? data.value.toString() : "";
       const d = replaceVars(raw_d, vars);
@@ -123,7 +124,7 @@ export async function runSheet(
           case "exists": await expect(loc).not.toHaveCount(0, tos); break;
           case "exists:not": await expect(loc).toHaveCount(0, tos); break;
           case "keys": await loc.fill(d, tos); break;
-          case 'dnd': await page.dragAndDrop(l, d, tos); break 
+          case 'dnd': await page.dragAndDrop(l, d, tos); break
           //TBD: Is it working?!
           case "click": await loc.click(tos); break;
           case "dblclick": await loc.dblclick(tos); break;
@@ -160,7 +161,7 @@ export async function runSheet(
             await page.click(l, { force: true });
             break;
           //Take a ScreenShot
-          case "screenshot": await page.screenshot({ path: d, fullPage: true }); break; 
+          case "screenshot": await page.screenshot({ path: d, fullPage: true }); break;
           case "frame":
           case "iframe":
             ctxStack.push(ctx);
@@ -169,6 +170,7 @@ export async function runSheet(
           case "frame:back":
           case "iframe:back": ctx = ctxStack.pop()!; break;
 
+          case "reload": await page.reload(); break;
           case "script":
             logAll("\t=", await page.evaluate(d, tos));
             break;

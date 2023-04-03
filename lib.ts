@@ -6,6 +6,7 @@ import {
 } from './consts';
 import * as fs from 'fs';
 import moment from 'moment';
+import { FrameLocator, Locator, Page } from '@playwright/test';
 
 export function rexss(text: string) { return new RegExp('.*' + text + '.*') }
 export function nullempty(text: any): string { return text ? text : '' }
@@ -175,6 +176,25 @@ export function replaceVars(input: string, vars: { [vid: string]: string }) {
   const out = input.replace(rx, (m, c) => getvar(c, vars))
   if (TRACE && input != out) console.log("-->", input, out)
   return out
+}
+
+export function locate(ctx: Page | FrameLocator, input: string): Locator {
+  let loc!: Locator
+  if (input.startsWith("!!!")) {
+    const parts = input.substring(3).split("|")
+    loc = ctx.getByText(parts[0] as any)
+  } else if (input.startsWith("!!")) {
+    const parts = input.substring(2).split("|")
+    loc = ctx.getByPlaceholder(parts[0] as any)
+  } else if (input.startsWith("!")) {
+    const parts = input.substring(1).split("|")
+    const role = parts[0] as any
+    const name = parts[1]
+    const exact = parts[2] === 'true'
+    loc = ctx.getByRole(parts[0] as any, { name, exact })
+  } else loc = ctx.locator(input)
+  // console.log(input, " -- ", loc)
+  return loc
 }
 
 // -----------------------------------------------------------------------------

@@ -1,0 +1,52 @@
+NOW: Monday, April 3, 2023 5:29 AM
+FILE: sample-tests.xlsx
+SHEET: 17
+LOCATOR: 3
+ACTION: 4
+DATA: 5
+ACTION_FORMAT: 
+PRINT_FORMAT: 
+COMMENT_FORMAT: {{1}} {{2}}
+TRACE_FORMAT: {{4}} - {{5}}   .   {{6}}
+DEBUG_TRACE: true
+sheets:  17
+1 basics
+2 key
+3 timeout
+4 keys
+5 script
+6 attrib_href
+7 iframe
+8 sleep
+9 dblclick
+10 file
+11 pause
+12 if_endif
+13 select
+14 tab
+15 var_set
+16 reload
+17 locator2-beta
+17
+
+Runnning sheet: 17 locator2-beta - 22 row(s)
+---- ---- ---- ----
+- 3 url -    .     = 4.841
+- 4 title - The Internet   .     = 0.046
+- 6 click -    .   ! | getByRole  = 0.439
+- 7 key - 4   .     = 0.046
+- 8 key - 7   .     = 0.014
+- 10 assert - 7   .   !!! getByText  = 0.020
+- 12 url -    .     = 1.794
+- 13 title - Interact   .     = 0.037
+- 15 keys - test   .   !! getByPlaceholder  = 0.049
+- 16 screenshot - screenshot-atlast.png   .     = 0.414
+- 20 sleep,1 -    .     = 1.004
+Sheet time:  = 8.742
+
+
+----
+TOTAL TIME:  = 8.907
+TOTAL ACTIONS: 11
+---------- xxxx ----------
+

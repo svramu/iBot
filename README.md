@@ -1,5 +1,5 @@
-**iBot 2.13.0**<br>
-*2022-08-29 Thursday*<br>
+**iBot 2.14.0**<br>
+*2023-04-03 Monday*<br>
 
 Prerequisites:
 --------------
@@ -25,6 +25,14 @@ npx playwright test
 
 Release Notes:
 --------------
+
+**2.14.0** (3rd April 2023, Monday)<br>
+Three new locators matching codegen - beta. 
+
+1. `!<role>|<name>|<true>` to match codgen getByRole
+2. `!!<input>` to match codgen getByPlaceholder
+3. `!!!<text>` to match codgen getByText
+
 
 **2.13.0** (29 September 2022, Thursday)<br>
 assert value and text. clarify non-regex escape. 
