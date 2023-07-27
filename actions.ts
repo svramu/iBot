@@ -152,6 +152,7 @@ export async function runSheet(
           case "select": await page.selectOption(l, d.split(",")); break;
           case "file": loc.setInputFiles(d); break;
 
+          case "dialogbox": await handleConfirmationDialog(page); break;
           //add multiple files from Browser Open Dialog
           case "files":
             page.on("filechooser", async (filechooser) => {

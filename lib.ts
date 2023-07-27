@@ -4,6 +4,7 @@ import {
   LOG_BRIGHT, LOG_RED, LOG_RESET,
   PRINT_TEMPLATE, SKIP_EMPTIES, TRACE_TEMPLATE, OUTPUT_LOG, envget,
 } from './consts';
+import { DialogUtility } from '@syncfusion/ej2-popups';
 import * as fs from 'fs';
 import moment from 'moment';
 import { FrameLocator, Locator, Page } from '@playwright/test';
@@ -196,6 +197,29 @@ export function locate(ctx: Page | FrameLocator, input: string): Locator {
   // console.log(input, " -- ", loc)
   return loc
 }
+
+  async function handleConfirmationDialog(page: Page) {
+    page.on('dialog', async (dialog) => {
+      if (dialog.type() === 'confirm') {
+        // Assuming we always want to accept the confirmation dialog (click "OK")
+        await dialog.accept();
+      }
+    });
+  }
+
+
+// Example usage in your test function
+async function myTestFunction(page: Page) {
+  // Your test code here...
+
+  // Call the function to handle the confirmation dialog
+  await handleConfirmationDialog(page);
+
+  // Perform actions that trigger the confirmation dialog...
+
+  // Continue with the rest of your test logic...
+}
+
 
 // -----------------------------------------------------------------------------
 
