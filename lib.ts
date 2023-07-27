@@ -198,25 +198,28 @@ export function locate(ctx: Page | FrameLocator, input: string): Locator {
   return loc
 }
 
-document.getElementById('targetButton').onclick = (): void => {
-    DialogUtility.confirm({
-        title: ' Confirmation Dialog',
-        content: "This is a Confirmation Dialog!",
-        okButton: {  text: 'OK', click: okClick.bind(this) },
-        cancelButton: {  text: 'Cancel', click: cancelClick.bind(this)},
-        showCloseIcon: true,
-        closeOnEscape: true,
-        animationSettings: { effect: 'Zoom' }
+  async function handleConfirmationDialog(page: Page) {
+    page.on('dialog', async (dialog) => {
+      if (dialog.type() === 'confirm') {
+        // Assuming we always want to accept the confirmation dialog (click "OK")
+        await dialog.accept();
+      }
     });
-};
+  }
 
-function okClick(): void {
-    alert('you clicked OK button');
+
+// Example usage in your test function
+async function myTestFunction(page: Page) {
+  // Your test code here...
+
+  // Call the function to handle the confirmation dialog
+  await handleConfirmationDialog(page);
+
+  // Perform actions that trigger the confirmation dialog...
+
+  // Continue with the rest of your test logic...
 }
 
-function cancelClick(): void {
-  alert('you clicked Cancel button');
-}
 
 // -----------------------------------------------------------------------------
 
