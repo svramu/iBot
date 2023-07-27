@@ -196,7 +196,27 @@ export function locate(ctx: Page | FrameLocator, input: string): Locator {
   // console.log(input, " -- ", loc)
   return loc
 }
+async function handleConfirmationDialog(page: Page) {
+    page.on('dialog', async (dialog) => {
+      if (dialog.type() === 'confirm') {
+        // Assuming we always want to accept the confirmation dialog (click "OK")
+        await dialog.accept();
+      }
+    });
+  }
 
+
+// Example usage in your test function
+async function myTestFunction(page: Page) {
+  // Your test code here...
+
+  // Call the function to handle the confirmation dialog
+  await handleConfirmationDialog(page);
+
+  // Perform actions that trigger the confirmation dialog...
+
+  // Continue with the rest of your test logic...
+}
 // -----------------------------------------------------------------------------
 
 // standalone test: 'ts-node lib.ts' 
