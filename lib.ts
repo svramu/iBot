@@ -4,6 +4,7 @@ import {
   LOG_BRIGHT, LOG_RED, LOG_RESET,
   PRINT_TEMPLATE, SKIP_EMPTIES, TRACE_TEMPLATE, OUTPUT_LOG, envget,
 } from './consts';
+import { DialogUtility } from '@syncfusion/ej2-popups';
 import * as fs from 'fs';
 import moment from 'moment';
 import { FrameLocator, Locator, Page } from '@playwright/test';
@@ -195,6 +196,26 @@ export function locate(ctx: Page | FrameLocator, input: string): Locator {
   } else loc = ctx.locator(input)
   // console.log(input, " -- ", loc)
   return loc
+}
+
+document.getElementById('targetButton').onclick = (): void => {
+    DialogUtility.confirm({
+        title: ' Confirmation Dialog',
+        content: "This is a Confirmation Dialog!",
+        okButton: {  text: 'OK', click: okClick.bind(this) },
+        cancelButton: {  text: 'Cancel', click: cancelClick.bind(this)},
+        showCloseIcon: true,
+        closeOnEscape: true,
+        animationSettings: { effect: 'Zoom' }
+    });
+};
+
+function okClick(): void {
+    alert('you clicked OK button');
+}
+
+function cancelClick(): void {
+  alert('you clicked Cancel button');
 }
 
 // -----------------------------------------------------------------------------
